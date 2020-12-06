@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.5.0",
     "axios": "^0.21.0",
     "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
     "firebase": "^8.1.2",
     "firebase-admin": "^9.4.1",
     "node-redis": "^0.1.7",
