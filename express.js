@@ -9,6 +9,7 @@ const redis = require('redis');
 const redisClient = redis.createClient();
 const bluebird = require('bluebird');
 var cookieParser = require('cookie-parser')
+require('dotenv').config();
 
 
 //Promisify Redis
@@ -26,7 +27,7 @@ admin.initializeApp({
 });
 
 //Function to create custom Firebase token based on Spotify ID
-async function createFirebaseAccount(spotifyID, displayName, photoURL, accessToken) {
+async function createFirebaseAccount(spotifyID, displayName, photoURL) {
   // The UID we'll assign to the user.
   const uid = `spotify:${spotifyID}`;
   // Create or update the user account.
@@ -39,7 +40,7 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, accessTok
       return admin.auth().createUser({
         uid: uid,
         displayName: displayName,
-        photoURL: photoURL
+        photoURL: photoURL,
       });
     }
     throw error;
@@ -69,7 +70,7 @@ function signInFirebaseTemplate(token, spotifyAccessToken) {
 const credentials = {
     client: {
         id: 'd8da61601d4d4dc88adf729228b3cf02',
-        secret: 'f770d8c5dc07468bb95c16ed22c7adc0'
+        secret: process.env.SPOTIFY_SECRET
     },
     auth: {
       tokenHost: 'https://accounts.spotify.com',
@@ -137,9 +138,10 @@ app.get('/login-redirect', (req, res) => {
       
 
         try{          
-          var firebaseToken = await createFirebaseAccount(id, displayname, image, accessToken);
+          var firebaseToken = await createFirebaseAccount(id, displayname, image);
           let uid = `spotify:${id}`
           
+          await redisClient.hsetAsync(`${uid}`,"accesstoken",accessToken);
           await redisClient.hsetAsync(`${uid}`,"displayname",displayname);
           await redisClient.hsetAsync(`${uid}`,"image", image);
           await redisClient.hsetAsync(`${uid}`,"refreshToken", refreshToken);
