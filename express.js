@@ -106,7 +106,7 @@ app.get('/login-redirect', (req, res) => {
     res.redirect(redirectUri);
   });
 
-  app.get('/spotify-callback',(req, res) => {
+  app.get('/spotify-callback',async (req, res) => {
     // Check that we received a State Cookie.
     if (!req.cookies || !req.cookies.state) {
       res.status(400).send('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
@@ -116,10 +116,10 @@ app.get('/login-redirect', (req, res) => {
       res.status(400).send('State validation failed');
       return;
     }
-    console.log(req.query.code)
+
+    try{
     // Exchange the auth code for an access token.
-    
-    client.getToken({
+    await client.getToken({
       code: req.query.code,
       redirect_uri: `http://localhost:9000/spotify-callback`
     }).then(async results => {
@@ -137,7 +137,9 @@ app.get('/login-redirect', (req, res) => {
         }
         const id = data.id;
         const displayname = data.display_name;
-        const image = data.images[0].url;
+   
+        const image = (data.images[0].url ? data.images[0].url : null);
+      
         try{          
           var firebaseToken = await createFirebaseAccount(id, displayname, image);
           let uid = `spotify:${id}`
@@ -154,7 +156,11 @@ app.get('/login-redirect', (req, res) => {
           return;
         }
         res.send(signInFirebaseTemplate(firebaseToken, accessToken));
-    });
+
+    }); 
+  } catch(e){
+    console.log(e);
+  }
   });
 
   app.get('/artists/:id',cors(),async (req, res) => {
