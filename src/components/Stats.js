@@ -5,7 +5,17 @@ import firebase from "firebase/app";
 
 function Stats() {
   const { currentUser } = useContext(AuthContext);
-  return <div>{!currentUser ? <Redirect to="/login" /> : <p>Stats</p>}</div>;
+  return (
+    <div>
+      {!currentUser ? (
+        <Redirect to="/login" />
+      ) : (
+        <div>
+          <p>{currentUser.displayName}'s Stats</p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default Stats;

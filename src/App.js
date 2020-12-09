@@ -17,7 +17,7 @@ function App() {
       <Router>
         <div className="App">
           <header className="App-header">
-            <h1>Unwrapped</h1>
+            <h1 className="Header-title">Unwrapped</h1>
             <nav>
               <NavLink to="/playlists">Playlists</NavLink>
               <NavLink to="/stats">Stats</NavLink>
@@ -35,9 +35,7 @@ function App() {
             <Route exact path="/">
               <Redirect to="/stats" />
             </Route>
-            {/** change component when Stats exists  */}
             <Route path="/stats" component={Stats} />
-            {/** change component when Playlists exists  */}
             <Route path="/playlists" component={Playlists} />
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />

@@ -6,7 +6,15 @@ import firebase from "firebase/app";
 function Playlists() {
   const { currentUser } = useContext(AuthContext);
   return (
-    <div>{!currentUser ? <Redirect to="/login" /> : <p>playlists</p>}</div>
+    <div>
+      {!currentUser ? (
+        <Redirect to="/login" />
+      ) : (
+        <div>
+          <p>{currentUser.displayName}'s Playlists</p>
+        </div>
+      )}
+    </div>
   );
 }
 
