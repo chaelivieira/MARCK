@@ -6,7 +6,7 @@ const LoginStatus = (props) => {
   const { currentUser } = useContext(AuthContext);
   props.updateUser(currentUser);
   // prettier-ignore
-  return <div>{currentUser ? <p>User ID: {currentUser.uid} Name: {currentUser.displayName}</p> : <p>Not Logged In</p>}</div>;
+  return <div hidden={true}>{currentUser ? <p>User ID: {currentUser.uid} Name: {currentUser.displayName}</p> : <p>Welcome to Unwrapped!</p>}</div>;
 };
 
 export default LoginStatus;

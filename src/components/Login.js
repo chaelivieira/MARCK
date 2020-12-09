@@ -24,7 +24,7 @@ function Login() {
   }
 
   if (currentUser) {
-    return <Redirect to="/" />;
+    return <Redirect to="/stats" />;
   }
 
   return (

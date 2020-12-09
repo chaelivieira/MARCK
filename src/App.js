@@ -3,11 +3,11 @@ import { AuthProvider, AuthContext } from "./firebase/Auth";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import LoginStatus from "./components/LoginStatus";
-import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
+import Playlists from "./components/Playlists";
+import Stats from "./components/Stats";
 import "./App.css";
-import userEvent from "@testing-library/user-event";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -32,14 +32,13 @@ function App() {
           <div className="App-body">
             <LoginStatus updateUser={setCurrentUser} />
             <br />
-            <Logout />
             <Route exact path="/">
               <Redirect to="/stats" />
             </Route>
             {/** change component when Stats exists  */}
-            <Route path="/stats" component={Home} />
+            <Route path="/stats" component={Stats} />
             {/** change component when Playlists exists  */}
-            <Route path="/playlists" component={Home} />
+            <Route path="/playlists" component={Playlists} />
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
           </div>
