@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
-import firebase from "firebase/app";
 
 function Playlists() {
   const { currentUser } = useContext(AuthContext);

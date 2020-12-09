@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthProvider, AuthContext } from "./firebase/Auth";
+import React, { useState } from "react";
+import { AuthProvider } from "./firebase/Auth";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import LoginStatus from "./components/LoginStatus";
