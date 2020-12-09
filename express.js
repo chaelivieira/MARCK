@@ -6,6 +6,7 @@ const admin = require('firebase-admin');
 const axios = require("axios");
 const serviceAccount = require('./private/service-account.json');
 const redis = require('redis');
+const cors = require('cors');
 const redisClient = redis.createClient();
 const bluebird = require('bluebird');
 var cookieParser = require('cookie-parser')
@@ -99,7 +100,7 @@ app.get('/login-redirect', (req, res) => {
     res.cookie('state', state.toString(), {maxAge: 3600000, secure: secureCookie, httpOnly: true});
     const redirectUri = client.authorizeURL({
       redirect_uri: `http://localhost:9000/spotify-callback`,
-      scope: 'user-read-private',
+      scope: 'user-read-private user-top-read',
       state: state
     });
     res.redirect(redirectUri);
@@ -115,12 +116,14 @@ app.get('/login-redirect', (req, res) => {
       res.status(400).send('State validation failed');
       return;
     }
-  
+    console.log(req.query.code)
     // Exchange the auth code for an access token.
+    
     client.getToken({
       code: req.query.code,
       redirect_uri: `http://localhost:9000/spotify-callback`
     }).then(async results => {
+      console.log(results);
         // We have an Spotify access token and the user identity now.
         const accessToken = results.token.access_token;
         const refreshToken = results.token.refresh_token;
@@ -135,8 +138,6 @@ app.get('/login-redirect', (req, res) => {
         const id = data.id;
         const displayname = data.display_name;
         const image = data.images[0].url;
-      
-
         try{          
           var firebaseToken = await createFirebaseAccount(id, displayname, image);
           let uid = `spotify:${id}`
@@ -153,11 +154,24 @@ app.get('/login-redirect', (req, res) => {
           return;
         }
         res.send(signInFirebaseTemplate(firebaseToken, accessToken));
-
     });
   });
-  
-  
+
+  app.get('/artists/:id',cors(),async (req, res) => {
+    console.log(req.params.id);
+      let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
+      var result = {};
+      console.log(accessToken);
+      try{
+      var {data} = await axios.get(`https://api.spotify.com/v1/me/top/artists`,{headers: {Authorization: `Bearer ${accessToken}`}});
+      //console.log(data);
+      result = JSON.stringify(data.items);
+      }catch (e){
+        console.log(e);
+      }
+      //console.log(result);
+      res.send(result);
+  }); 
 
   app.listen(9000, () => {
     console.log("Server is running!");

@@ -4,6 +4,9 @@ import { NavLink } from 'react-router-dom';
 import LoginStatus from './components/LoginStatus';
 import Login from './components/Login';
 import Logout from './components/Logout';
+import Home from './components/Home';
+import Stats from './components/Stats';
+import Playlists from './components/Playlists';
 import './App.css';
 
 
@@ -19,8 +22,11 @@ function App() {
             <Logout/>
           </header>
           <div className='App-body'>
+            <Route exact path="/" component={Home}/>
             <Route path="/login" component={Login}/>
             <Route path="/logout" component={Logout}/>
+            <Route path="/stats" component={Stats}/>
+            <Route path="/playlist" component={Playlists}/>
           </div>
         </div>
 
