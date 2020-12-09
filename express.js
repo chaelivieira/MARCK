@@ -134,7 +134,8 @@ app.get('/login-redirect', (req, res) => {
         }
         const id = data.id;
         const displayname = data.display_name;
-        const image = data.images[0].url;
+        
+        const image = (data.images[0].url ? data.images[0].url : null);
       
 
         try{          
