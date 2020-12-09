@@ -135,8 +135,7 @@ app.get('/login-redirect', (req, res) => {
         const id = data.id;
         const displayname = data.display_name;
         
-        const image = (data.images[0].url ? data.images[0].url : null);
-      
+        const image = (data.images[0] && data.images[0].url ? data.images[0].url : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg");
 
         try{          
           var firebaseToken = await createFirebaseAccount(id, displayname, image);
