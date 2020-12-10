@@ -167,7 +167,7 @@ app.get('/login-redirect', (req, res) => {
   }
   });
 
-  app.get('/artists/:id',cors(),async (req, res) => {
+  app.get('/artists/:id/:time',cors(),async (req, res) => {
     
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
