@@ -17,6 +17,7 @@ function App() {
           <header className="App-header">
             <LoginStatus/>
             <NavLink to="/login">Login</NavLink>
+            <NavLink to="/playlists">Playlists</NavLink>
             <br/>
             <Logout/>
           </header>
@@ -24,7 +25,7 @@ function App() {
             <Route exact path="/" component={Home}/>
             <Route path="/login" component={Login}/>
             <Route path="/logout" component={Logout}/>
-            <Route path="/playlist" component={Playlists}/>
+            <Route path="/playlists" component={Playlists}/>
             <Route path="/stats" component={Stats}/>
           </div>
         </div>

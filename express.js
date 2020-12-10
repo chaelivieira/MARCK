@@ -137,9 +137,9 @@ app.get('/login-redirect', (req, res) => {
         }
         const id = data.id;
         const displayname = data.display_name;
-   
-        const image = (data.images[0].url ? data.images[0].url : null);
-      
+        
+        const image = (data.images[0] && data.images[0].url ? data.images[0].url : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg");
+
         try{          
           var firebaseToken = await createFirebaseAccount(id, displayname, image);
           let uid = `spotify:${id}`
@@ -163,13 +163,8 @@ app.get('/login-redirect', (req, res) => {
   }
   });
 
-<<<<<<< HEAD
-  app.get('/artists/:id/:time',cors(),async (req, res) => {
-    console.log(req.params.id);
-=======
   app.get('/artists/:id',cors(),async (req, res) => {
     
->>>>>>> 05ed5efe905cba5a3c5016c73f289556eca78750
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
       
