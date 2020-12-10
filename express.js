@@ -167,7 +167,7 @@ app.get('/login-redirect', (req, res) => {
     console.log(req.params.id);
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
-      console.log(accessToken);
+      
       try{
       var {data} = await axios.get(`https://api.spotify.com/v1/me/top/artists`,{headers: {Authorization: `Bearer ${accessToken}`}});
       //console.log(data);
