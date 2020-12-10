@@ -106,7 +106,7 @@ app.get('/login-redirect', (req, res) => {
     res.redirect(redirectUri);
   });
 
-  app.get('/spotify-callback',(req, res) => {
+  app.get('/spotify-callback',async (req, res) => {
     // Check that we received a State Cookie.
     if (!req.cookies || !req.cookies.state) {
       res.status(400).send('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
@@ -116,14 +116,14 @@ app.get('/login-redirect', (req, res) => {
       res.status(400).send('State validation failed');
       return;
     }
-    console.log(req.query.code)
+
+    try{
     // Exchange the auth code for an access token.
-    
-    client.getToken({
+    await client.getToken({
       code: req.query.code,
       redirect_uri: `http://localhost:9000/spotify-callback`
     }).then(async results => {
-      console.log(results);
+      
         // We have an Spotify access token and the user identity now.
         const accessToken = results.token.access_token;
         const refreshToken = results.token.refresh_token;
@@ -137,7 +137,9 @@ app.get('/login-redirect', (req, res) => {
         }
         const id = data.id;
         const displayname = data.display_name;
-        const image = data.images[0].url;
+   
+        const image = (data.images[0].url ? data.images[0].url : null);
+      
         try{          
           var firebaseToken = await createFirebaseAccount(id, displayname, image);
           let uid = `spotify:${id}`
@@ -154,14 +156,23 @@ app.get('/login-redirect', (req, res) => {
           return;
         }
         res.send(signInFirebaseTemplate(firebaseToken, accessToken));
-    });
+
+    }); 
+  } catch(e){
+    console.log(e);
+  }
   });
 
+<<<<<<< HEAD
   app.get('/artists/:id/:time',cors(),async (req, res) => {
     console.log(req.params.id);
+=======
+  app.get('/artists/:id',cors(),async (req, res) => {
+    
+>>>>>>> 05ed5efe905cba5a3c5016c73f289556eca78750
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
-      console.log(accessToken);
+      
       try{
       var {data} = await axios.get(`https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
       //console.log(data);
