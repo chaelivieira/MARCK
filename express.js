@@ -157,13 +157,13 @@ app.get('/login-redirect', (req, res) => {
     });
   });
 
-  app.get('/artists/:id',cors(),async (req, res) => {
+  app.get('/artists/:id/:time',cors(),async (req, res) => {
     console.log(req.params.id);
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
       console.log(accessToken);
       try{
-      var {data} = await axios.get(`https://api.spotify.com/v1/me/top/artists`,{headers: {Authorization: `Bearer ${accessToken}`}});
+      var {data} = await axios.get(`https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
       //console.log(data);
       result = JSON.stringify(data.items);
       }catch (e){
@@ -173,6 +173,21 @@ app.get('/login-redirect', (req, res) => {
       res.send(result);
   }); 
 
+  app.get('/tracks/:id/:time',cors(),async (req, res) => {
+    console.log(req.params.id);
+      let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
+      var result = {};
+      console.log(accessToken);
+      try{
+      var {data} = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
+      //console.log(data);
+      result = JSON.stringify(data.items);
+      }catch (e){
+        console.log(e);
+      }
+      //console.log(result);
+      res.send(result);
+  }); 
   app.listen(9000, () => {
     console.log("Server is running!");
     console.log("Your routes will be running on http://localhost:9000");

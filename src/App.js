@@ -9,7 +9,6 @@ import Stats from './components/Stats';
 import Playlists from './components/Playlists';
 import './App.css';
 
-
 function App() {
   return (
     <AuthProvider>
@@ -25,8 +24,8 @@ function App() {
             <Route exact path="/" component={Home}/>
             <Route path="/login" component={Login}/>
             <Route path="/logout" component={Logout}/>
-            <Route path="/stats" component={Stats}/>
             <Route path="/playlist" component={Playlists}/>
+            <Route path="/stats" component={Stats}/>
           </div>
         </div>
 

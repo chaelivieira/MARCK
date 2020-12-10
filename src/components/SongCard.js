@@ -2,23 +2,21 @@ import React, { useState } from 'react';
 import '../App.css';
 
 
-function ArtistCard(props) {
+function SongCard(props) {
     return (
       <div>
+          
             <div className="card" key={props.id}>
               <div className="card-body">
                 <h3 className="card-title">
                   {props.name}
                 </h3>
-                <img className= "cardImage" alt={props.name} src={props.url} />
+                <img className= "cardImage"alt={props.name} src={props.url} />
                 <br />
                 <div>
-                    Number of Followers: {props.followers}
+                    Artists:
                     <br/>
-                    <br/>
-                    Genres:
-                    <br/>
-                    {props.genres.map((x) => {return <div>{x}</div>})}
+                    {props.artists.map((x) => {return <div>{x.name}</div>})}
                 </div>
               </div>
             </div>
@@ -26,4 +24,4 @@ function ArtistCard(props) {
     );
 }
 
-export default ArtistCard;
+export default SongCard;
