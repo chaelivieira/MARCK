@@ -10,6 +10,8 @@ const cors = require('cors');
 const redisClient = redis.createClient();
 const bluebird = require("bluebird");
 var cookieParser = require("cookie-parser");
+const qs = require('qs');
+
 require("dotenv").config();
 
 //Promisify Redis
@@ -65,11 +67,11 @@ function signInFirebaseTemplate(token, spotifyAccessToken) {
       window.close();
     </script>`;
 }
-
+var clientID = "d8da61601d4d4dc88adf729228b3cf02"
 //Creds for login page & Auth code setup
 const credentials = {
   client: {
-    id: "d8da61601d4d4dc88adf729228b3cf02",
+    id: clientID,
     secret: process.env.SPOTIFY_SECRET,
   },
   auth: {
@@ -167,8 +169,42 @@ app.get('/login-redirect', (req, res) => {
   }
   });
 
+async function refreshSpotifyToken(sID){
+  let refreshToken = await redisClient.hgetAsync(`${sID}`, "refreshToken");
+  console.log("Pre-Re: ",refreshToken);
+  var base64 = new Buffer.from(clientID + ':' + process.env.SPOTIFY_SECRET).toString('base64');
+
+
+  try{
+    let {data} = await axios.post(`https://accounts.spotify.com/api/token`,
+      qs.stringify({
+      grant_type: 'refresh_token',
+      refresh_token: `${refreshToken}`}),
+      { headers: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+        Authorization: `Basic ${base64}`
+      }
+      
+    });
+    await redisClient.hsetAsync(`${sID}`, "accesstoken", data.access_token);
+    await redisClient.hsetAsync(`${sID}`, "expiresAt", new Date() + data.expires_in);
+
+
+
+  } catch(e){
+    console.log(e);
+  }
+        
+  }
+
   app.get('/artists/:id/:time',cors(),async (req, res) => {
-    
+      let expDate = Date.parse(await redisClient.hgetAsync(`${req.params.id}`, "expiresAt"));
+      let curDate = new Date();
+      if(curDate > expDate){
+        refreshSpotifyToken(req.params.id);
+      }
+        
+
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
       
@@ -184,19 +220,26 @@ app.get('/login-redirect', (req, res) => {
   }); 
 
   app.get('/tracks/:id/:time',cors(),async (req, res) => {
-    console.log(req.params.id);
-      let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
-      var result = {};
-      console.log(accessToken);
-      try{
-      var {data} = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
-      //console.log(data);
-      result = JSON.stringify(data.items);
-      }catch (e){
-        console.log(e);
-      }
-      //console.log(result);
-      res.send(result);
+      
+    let expDate = Date.parse(await redisClient.hgetAsync(`${req.params.id}`, "expiresAt"));
+    let curDate = new Date();
+    console.log(await redisClient.hgetAsync(`${req.params.id}`, "expiresAt"));
+    if(curDate > expDate){
+      refreshSpotifyToken(req.params.id);
+    }
+
+    let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
+    var result = {};
+    console.log(accessToken);
+    try{
+    var {data} = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
+    //console.log(data);
+    result = JSON.stringify(data.items);
+    }catch (e){
+      console.log(e);
+    }
+    //console.log(result);
+    res.send(result);
   }); 
   app.listen(9000, () => {
     console.log("Server is running!");
