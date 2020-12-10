@@ -1,11 +1,50 @@
 import React, { useContext, useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+  makeStyles,
+} from "@material-ui/core";
 import axios from "axios";
+
+const useStyles = makeStyles({
+  card: {
+    maxWidth: 250,
+    height: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: 5,
+    border: "1px solid #1e8678",
+    boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
+  },
+  titleHead: {
+    borderBottom: "1px solid #1e8678",
+    fontWeight: "bold",
+  },
+  grid: {
+    flexGrow: 1,
+    flexDirection: "row",
+  },
+  media: {
+    height: "100%",
+    width: "100%",
+  },
+  button: {
+    color: "#1e8678",
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+});
 
 function Playlists() {
   const { currentUser } = useContext(AuthContext);
   const [playlists, setPlaylists] = useState(null);
+  const classes = useStyles();
 
   function buildPlaylistElements(playlist) {
     if (playlists === null) {
@@ -13,16 +52,37 @@ function Playlists() {
     } else {
       return (
         <div>
-          <p>Playlist name: {playlist.name}</p>
-          <p>Type: {playlist.type}</p>
-          <p>collaborative: {playlist.collaborative ? "true" : "false"}</p>
-          <p>public: {playlist.public ? "true" : "false"}</p>
-          <p>href: {playlist.href}</p>
-          <p>id: {playlist.id}</p>
-          <p>images: {playlist.images.length > 0 ? playlist.images : "[]"}</p>
-          <p>owner: {JSON.stringify(playlist.owner)}</p>
-          <p>tracks: {JSON.stringify(playlist.tracks)}</p>
-          <br />
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={playlist.id}>
+            <Card className={classes.card} variant="outlined">
+              <CardActionArea>
+                <div>
+                  <CardMedia
+                    className={classes.media}
+                    component="img"
+                    title={playlist.name + " image"}
+                  />
+
+                  <CardContent>
+                    <p>Playlist name: {playlist.name}</p>
+                    <p>Type: {playlist.type}</p>
+                    <p>
+                      collaborative: {playlist.collaborative ? "true" : "false"}
+                    </p>
+                    <p>public: {playlist.public ? "true" : "false"}</p>
+                    <p>href: {playlist.href}</p>
+                    <p>id: {playlist.id}</p>
+                    <p>
+                      images:{" "}
+                      {playlist.images.length > 0 ? playlist.images : "[]"}
+                    </p>
+                    <p>owner: {JSON.stringify(playlist.owner)}</p>
+                    <p>tracks: {JSON.stringify(playlist.tracks)}</p>
+                    <br />
+                  </CardContent>
+                </div>
+              </CardActionArea>
+            </Card>
+          </Grid>
         </div>
       );
     }
