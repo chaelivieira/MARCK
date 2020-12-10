@@ -2,9 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import firebase from "firebase/app";
 
-function Logout() {
+function Logout(props) {
   async function onSignout() {
     await firebase.auth().signOut();
+    props.onLogOut(null);
   }
 
   return (

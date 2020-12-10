@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
 import firebase from "firebase/app";
 
-function Login() {
+function Login(props) {
   const { currentUser } = useContext(AuthContext);
 
   window.addEventListener("message", async (event) => {
@@ -24,7 +24,12 @@ function Login() {
   }
 
   if (currentUser) {
-    return <Redirect to="/stats" />;
+    props.onLogIn(currentUser);
+    return (
+      <div>
+        <Redirect to="/" />
+      </div>
+    );
   }
 
   return (

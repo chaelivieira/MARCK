@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { AuthProvider } from "./firebase/Auth";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import LoginStatus from "./components/LoginStatus";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import Playlists from "./components/Playlists";
@@ -11,6 +10,10 @@ import "./App.css";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
+
+  const receiveUserData = (data) => {
+    setCurrentUser(data);
+  };
 
   return (
     <AuthProvider>
@@ -30,15 +33,20 @@ function App() {
             </nav>
           </header>
           <div className="App-body">
-            <LoginStatus updateUser={setCurrentUser} />
             <br />
             <Route exact path="/">
               <Redirect to="/stats" />
             </Route>
             <Route path="/stats" component={Stats} />
-            <Route path="/playlists" component={Playlists} />
-            <Route path="/login" component={Login} />
-            <Route path="/logout" component={Logout} />
+            <Route path="/playlists">
+              <Playlists />
+            </Route>
+            <Route path="/login">
+              <Login onLogIn={receiveUserData} />
+            </Route>
+            <Route path="/logout">
+              <Logout onLogOut={receiveUserData} />
+            </Route>
           </div>
         </div>
       </Router>
