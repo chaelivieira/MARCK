@@ -15,6 +15,7 @@
     "firebase": "^8.1.2",
     "firebase-admin": "^9.4.1",
     "node-redis": "^0.1.7",
+    "qs": "^6.9.4",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
