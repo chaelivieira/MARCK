@@ -123,7 +123,7 @@ app.get('/login-redirect', (req, res) => {
       code: req.query.code,
       redirect_uri: `http://localhost:9000/spotify-callback`
     }).then(async results => {
-      console.log(results);
+      
         // We have an Spotify access token and the user identity now.
         const accessToken = results.token.access_token;
         const refreshToken = results.token.refresh_token;
