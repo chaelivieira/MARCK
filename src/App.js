@@ -24,7 +24,6 @@ function App() {
             <nav>
               <NavLink to="/playlists">Playlists</NavLink>
               <NavLink to="/stats">Stats</NavLink>
-              {/** I'd like this to say log in/out based on loginstatus, how to get this to rerender */}
               {currentUser === null ? (
                 <NavLink to="/login">Log in</NavLink>
               ) : (
