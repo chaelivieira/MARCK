@@ -20,7 +20,6 @@ function App() {
       <Router>
         <div className="App">
           <header className="App-header">
-<<<<<<< HEAD
             <h1 className="Header-title">Unwrapped</h1>
             <nav>
               <NavLink to="/playlists">Playlists</NavLink>
@@ -47,20 +46,6 @@ function App() {
             <Route path="/logout">
               <Logout onLogOut={receiveUserData} />
             </Route>
-=======
-            <LoginStatus/>
-            <NavLink to="/login">Login</NavLink>
-            <NavLink to="/playlists">Playlists</NavLink>
-            <br/>
-            <Logout/>
-          </header>
-          <div className='App-body'>
-            <Route exact path="/" component={Home}/>
-            <Route path="/login" component={Login}/>
-            <Route path="/logout" component={Logout}/>
-            <Route path="/playlists" component={Playlists}/>
-            <Route path="/stats" component={Stats}/>
->>>>>>> bd0c529e9e0668b0bf6445088f3c54ecc640e4a5
           </div>
         </div>
       </Router>
