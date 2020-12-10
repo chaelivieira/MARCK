@@ -159,8 +159,6 @@ app.get('/login-redirect', (req, res) => {
     console.log(e);
   }
   });
-  
-  
 
   app.listen(9000, () => {
     console.log("Server is running!");
