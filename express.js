@@ -108,28 +108,24 @@ app.get('/login-redirect', (req, res) => {
     res.redirect(redirectUri);
   });
 
-app.get("/spotify-callback", (req, res) => {
-  // Check that we received a State Cookie.
-  if (!req.cookies || !req.cookies.state) {
-    res
-      .status(400)
-      .send(
-        "State cookie not set or expired. Maybe you took too long to authorize. Please try again."
-      );
-    return;
+  app.get('/spotify-callback',async (req, res) => {
+    // Check that we received a State Cookie.
+    if (!req.cookies || !req.cookies.state) {
+      res.status(400).send('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
+      return;
     // Check the State Cookie is equal to the state parameter.
-  } else if (req.cookies.state !== req.query.state) {
-    res.status(400).send("State validation failed");
-    return;
-  }
-  try{
+    } else if (req.cookies.state !== req.query.state) {
+      res.status(400).send('State validation failed');
+      return;
+    }
+
+    try{
     // Exchange the auth code for an access token.
-    client
-      .getToken({
-        code: req.query.code,
-        redirect_uri: `http://localhost:9000/spotify-callback`,
-      })
-      .then(async (results) => {
+    await client.getToken({
+      code: req.query.code,
+      redirect_uri: `http://localhost:9000/spotify-callback`
+    }).then(async results => {
+      
         // We have an Spotify access token and the user identity now.
         const accessToken = results.token.access_token;
         const refreshToken = results.token.refresh_token;
@@ -145,6 +141,7 @@ app.get("/spotify-callback", (req, res) => {
         }
         const id = data.id;
         const displayname = data.display_name;
+        
         const image = (data.images[0] && data.images[0].url ? data.images[0].url : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg");
 
         try {
@@ -163,47 +160,45 @@ app.get("/spotify-callback", (req, res) => {
             return;
         }
         res.send(signInFirebaseTemplate(firebaseToken, accessToken));
-      });
-    } catch(e) {
-      console.log(e);	
-    }
+
+    }); 
+  } catch(e){
+    console.log(e);
+  }
   });
 
-app.get('/artists/:id/:time',cors(),async (req, res) => {
-  console.log("Here");
-  let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
-  var result = {};
-  
-  try{
+  app.get('/artists/:id',cors(),async (req, res) => {
     
-    var {data} = await axios.get(`https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
-    console.log("DATA",data);
-    //console.log(data);
-    result = JSON.stringify(data.items);
-  }catch (e){
-    console.log(e);
-  }
-  //console.log(result);
-  res.send(result);
-}); 
+      let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
+      var result = {};
+      
+      try{
+      var {data} = await axios.get(`https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
+      //console.log(data);
+      result = JSON.stringify(data.items);
+      }catch (e){
+        console.log(e);
+      }
+      //console.log(result);
+      res.send(result);
+  }); 
 
-app.get('/tracks/:id/:time',cors(),async (req, res) => {
-console.log(req.params.id);
-  let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
-  var result = {};
-  console.log(accessToken);
-  try{
-  var {data} = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
-  //console.log(data);
-  result = JSON.stringify(data.items);
-  }catch (e){
-    console.log(e);
-  }
-  //console.log(result);
-  res.send(result);
-}); 
-
-app.listen(9000, () => {
-  console.log("Server is running!");
-  console.log("Your routes will be running on http://localhost:9000");
+  app.get('/tracks/:id/:time',cors(),async (req, res) => {
+    console.log(req.params.id);
+      let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
+      var result = {};
+      console.log(accessToken);
+      try{
+      var {data} = await axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=10`,{headers: {Authorization: `Bearer ${accessToken}`}});
+      //console.log(data);
+      result = JSON.stringify(data.items);
+      }catch (e){
+        console.log(e);
+      }
+      //console.log(result);
+      res.send(result);
+  }); 
+  app.listen(9000, () => {
+    console.log("Server is running!");
+    console.log("Your routes will be running on http://localhost:9000");
 });
