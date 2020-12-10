@@ -52,7 +52,7 @@ const Playlists = (props) => {
     const { currentUser } = useContext(AuthContext);
     console.log(currentUser.uid);
 	var spotifyApi = new SpotifyWebApi();
-	const accessToken = "BQCLTO--MXOY0sIRXcYJuHXa0pdp7WKLcUQGPKVDtOwqSdCWHTFNTdKMJe4L9dOhtC9ruQu2aNQMSiu_ZB3Y6_Fgz9FT9vag9qfI3nXLgtE9k81mGrP0mJ4L4V02KfhB2hfng46_LTO2WdyiTLSGzq3eAbJ6fg";
+	const accessToken = "BQARm5-fDEoPJqUIkqQB2IKy0op_Iy1DRbkj0sMFf7EsmmjZ7NCGBXnTkR3-I3LepNzqRhQ2uHdvFiumPG3jvGcGCQV_FRKM2HIOBpM7b_vlUWq_wlOaKh8y3-jskY1V2eyS5cdPC85pxUFv_wk-U-dcuxKegw";
 	spotifyApi.setAccessToken(accessToken);
 
     useEffect(
