@@ -1,15 +1,20 @@
-import { AuthProvider } from './firebase/Auth';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
-import LoginStatus from './components/LoginStatus';
-import Login from './components/Login';
-import Logout from './components/Logout';
-import Home from './components/Home';
-import Stats from './components/Stats';
-import Playlists from './components/Playlists';
-import './App.css';
+import React, { useState } from "react";
+import { AuthProvider } from "./firebase/Auth";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import Login from "./components/Login";
+import Logout from "./components/Logout";
+import Playlists from "./components/Playlists";
+import Stats from "./components/Stats";
+import "./App.css";
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const receiveUserData = (data) => {
+    setCurrentUser(data);
+  };
+
   return (
     <AuthProvider>
       <Router>
@@ -29,12 +34,8 @@ function App() {
             <Route path="/stats" component={Stats}/>
           </div>
         </div>
-
       </Router>
     </AuthProvider>
-
-
-    
   );
 }
 
