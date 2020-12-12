@@ -201,10 +201,6 @@ async function refreshSpotifyToken(sID){
 <<<<<<< HEAD
 <<<<<<< HEAD
     console.log(req.params.id);
-=======
-    
->>>>>>> 5b10dadc487117c610a60c991fccc47951f1d5bf
-=======
       let expDate = Date.parse(await redisClient.hgetAsync(`${req.params.id}`, "expiresAt"));
       let curDate = new Date();
       if(curDate > expDate){
