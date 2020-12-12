@@ -198,8 +198,6 @@ async function refreshSpotifyToken(sID){
   }
 
   app.get('/artists/:id/:time',cors(),async (req, res) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
     console.log(req.params.id);
       let expDate = Date.parse(await redisClient.hgetAsync(`${req.params.id}`, "expiresAt"));
       let curDate = new Date();
@@ -207,8 +205,6 @@ async function refreshSpotifyToken(sID){
         refreshSpotifyToken(req.params.id);
       }
         
-
->>>>>>> f619c08d92503fff69732c45ea5eccb6abe27a69
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
       
