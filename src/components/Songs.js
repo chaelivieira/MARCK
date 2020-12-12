@@ -75,7 +75,14 @@ function Songs() {
   const items = data;
   if (artistsLoaded) {
     if (items === undefined || items.length == 0) {
-      return <h2>Sorry.. You dont have any top songs</h2>;
+      return (
+        <div>
+          <h2>Sorry.. You dont have any top songs within this time period</h2>
+          <Button onClick={handleShort_term}>This Month</Button>
+          <Button onClick={handleMedium_term}>This Year</Button>
+          <Button onClick={handleLong_term}>All Time</Button>
+        </div>
+      );
     } else {
       return (
         <div>
