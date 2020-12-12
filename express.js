@@ -163,13 +163,8 @@ app.get('/login-redirect', (req, res) => {
   }
   });
 
-<<<<<<< HEAD
   app.get('/artists/:id/:time',cors(),async (req, res) => {
     console.log(req.params.id);
-=======
-  app.get('/artists/:id',cors(),async (req, res) => {
-    
->>>>>>> 05ed5efe905cba5a3c5016c73f289556eca78750
       let accessToken = await redisClient.hgetAsync(`${req.params.id}`, "accesstoken")
       var result = {};
       
