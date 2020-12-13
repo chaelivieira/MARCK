@@ -219,6 +219,7 @@ async function refreshSpotifyToken(sID) {
   }
 }
 
+
 app.get("/artists/:id/:time", cors(), async (req, res) => {
   console.log(req.params.id);
   let expDate = Date.parse(
@@ -257,6 +258,7 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
           result
         );
       } catch (e) {
+
         console.log(e);
       }
     }
