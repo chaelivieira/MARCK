@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   CardActionArea,
@@ -18,6 +18,10 @@ const useStyles = makeStyles({
     borderRadius: 5,
     border: "1px solid #1e8678",
     boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
+  },
+  content: {
+    maxWidth: 250,
+    height: 600,
   },
   titleHead: {
     borderBottom: "1px solid #1e8678",
@@ -40,7 +44,7 @@ const useStyles = makeStyles({
 function SongCard(props) {
   const classes = useStyles();
   return (
-    <Grid item xs={15} sm={15} md={15} lg={15} xl={15} key={props.id}>
+    <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={props.id}>
       <Card className={classes.card} variant="outlined">
         <CardActionArea>
           <CardMedia
@@ -50,7 +54,7 @@ function SongCard(props) {
             image={props.url}
             title="show image"
           />
-          <CardContent>
+          <CardContent className={classes.content}>
             <Typography
               className={classes.titleHead}
               gutterBottom

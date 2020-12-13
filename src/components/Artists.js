@@ -3,42 +3,12 @@ import Button from "react-bootstrap/Button";
 import { AuthContext } from "../firebase/Auth";
 import ArtistCard from "./ArtistCard";
 import "../App.css";
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 const axios = require("axios");
 const useStyles = makeStyles({
-  card: {
-    maxWidth: 250,
-    height: 500,
-    marginLeft: "auto",
-    marginRight: "auto",
-    borderRadius: 5,
-    border: "1px solid #1e8678",
-    boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
-  },
-  titleHead: {
-    borderBottom: "1px solid #1e8678",
-    fontWeight: "bold",
-  },
   grid: {
     flexGrow: 1,
     flexDirection: "row",
-  },
-  media: {
-    height: "100%",
-    width: "100%",
-  },
-  button: {
-    color: "#1e8678",
-    fontWeight: "bold",
-    fontSize: 12,
   },
 });
 function Artists() {
@@ -76,13 +46,48 @@ function Artists() {
   const items = data;
   if (artistsLoaded) {
     if (items === undefined || items.length == 0) {
-      return <h2>Sorry.. You dont have any top artists</h2>;
+      return (
+        <div>
+          <h2>Sorry.. You dont have any top artists within this time period</h2>
+          <Button
+            variant="secondary  mr-1"
+            size="lg"
+            onClick={handleShort_term}
+          >
+            This Month
+          </Button>
+          <Button
+            variant="secondary  mr-1"
+            size="lg"
+            onClick={handleMedium_term}
+          >
+            This Year
+          </Button>
+          <Button variant="secondary  mr-1" size="lg" onClick={handleLong_term}>
+            All Time
+          </Button>
+        </div>
+      );
     } else {
       return (
         <div>
-          <Button onClick={handleShort_term}>This Month</Button>
-          <Button onClick={handleMedium_term}>This Year</Button>
-          <Button onClick={handleLong_term}>All Time</Button>
+          <Button
+            variant="secondary  mr-1"
+            size="lg"
+            onClick={handleShort_term}
+          >
+            This Month
+          </Button>
+          <Button
+            variant="secondary  mr-1"
+            size="lg"
+            onClick={handleMedium_term}
+          >
+            This Year
+          </Button>
+          <Button variant="secondary  mr-1" size="lg" onClick={handleLong_term}>
+            All Time
+          </Button>
           <br />
           <br></br>
           <div>
@@ -106,9 +111,15 @@ function Artists() {
   } else {
     return (
       <div>
-        <Button onClick={handleShort_term}>This Month</Button>
-        <Button onClick={handleMedium_term}>This Year</Button>
-        <Button onClick={handleLong_term}>All Time</Button>
+        <Button variant="secondary  mr-1" size="lg" onClick={handleShort_term}>
+          This Month
+        </Button>
+        <Button variant="secondary  mr-1" size="lg" onClick={handleMedium_term}>
+          This Year
+        </Button>
+        <Button variant="secondary  mr-1" size="lg" onClick={handleLong_term}>
+          All Time
+        </Button>
       </div>
     );
   }
