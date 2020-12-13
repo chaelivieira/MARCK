@@ -347,8 +347,7 @@ app.post("/imageUpload", upload.single("file"), async (req, res) => {
 });
 
 app.get("/playlists/:id", cors(), async (req, res) => {
-  console.log("playlists id route");
-let expDate = Date.parse(
+  let expDate = Date.parse(
     await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
   );
   let curDate = new Date();
@@ -366,7 +365,6 @@ let expDate = Date.parse(
       if (uid.indexOf("spotify:") === 0) {
         uid = uid.substring(uid.indexOf(":") + 1, uid.length);
       }
-      console.log(`uid ${uid}`);
       const { data } = await axios.get(
         `https://api.spotify.com/v1/users/${uid}/playlists`,
         {
@@ -375,6 +373,38 @@ let expDate = Date.parse(
       );
 
       result = JSON.stringify(data.items);
+      res.send(result);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    console.log("no access token");
+  }
+});
+
+app.get("/playlists/:id/:playlistId", cors(), async (req, res) => {
+  let expDate = Date.parse(
+    await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
+  );
+  let curDate = new Date();
+  if (curDate > expDate) {
+    refreshSpotifyToken(req.params.id);
+  }
+  let accessToken = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    "accesstoken"
+  );
+  var result = {};
+  if (accessToken) {
+    try {
+      const { data } = await axios.get(
+        `https://api.spotify.com/v1/playlists/${req.params.playlistId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      result = JSON.stringify(data);
       res.send(result);
     } catch (e) {
       console.log(e);

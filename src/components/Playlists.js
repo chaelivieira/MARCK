@@ -58,28 +58,13 @@ const Playlists = (props) => {
   const [playlistData, setPlaylistData] = useState(undefined);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser.uid);
-  var spotifyApi = new SpotifyWebApi();
-  const accessToken =
-    "BQARm5-fDEoPJqUIkqQB2IKy0op_Iy1DRbkj0sMFf7EsmmjZ7NCGBXnTkR3-I3LepNzqRhQ2uHdvFiumPG3jvGcGCQV_FRKM2HIOBpM7b_vlUWq_wlOaKh8y3-jskY1V2eyS5cdPC85pxUFv_wk-U-dcuxKegw";
-  spotifyApi.setAccessToken(accessToken);
 
   useEffect(() => {
-    console.log("UseEffect fired");
     async function fetchData() {
       try {
-        // const accessToken = await client.hgetAsync(currentUser.uid, "accesstoken");
-        // console.log(accessToken);
-        // spotifyApi.getUserPlaylists(currentUser.displayName).then(function(data) {
-        //     console.log(data.body.items)
-        // 	setPlaylistData(data.body.items);
-        // 	setLoading(false);
-        // });
-        console.log("before axios");
         const { data } = await axios.get(
           `http://localhost:9000/playlists/${currentUser.uid}`
         );
-        console.log("after axios");
         console.log(data);
         setPlaylistData(data);
         setLoading(false);
