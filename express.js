@@ -11,8 +11,10 @@ const redisClient = redis.createClient();
 const bluebird = require("bluebird");
 var wkhtmltopdf = require("wkhtmltopdf");
 var cookieParser = require("cookie-parser");
-const qs = require("qs");
-
+const qs = require('qs');
+const fs = require("fs");
+const gm = require("gm").subClass({ imageMagick: true });
+const multer = require("multer");
 require("dotenv").config();
 
 //Promisify Redis
@@ -86,7 +88,9 @@ const client = new AuthorizationCode(credentials);
 
 //Make cookies visible
 app.use(cookieParser());
-
+//Parse for Image uploads
+var upload = multer({ dest: '/tmp/'});
+//CORS Every Route
 app.use(cors());
 
 //Deliver Production react
@@ -309,9 +313,39 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
       }
     }
     res.send(result);
-  }
-});
-app.listen(9000, () => {
-  console.log("Server is running!");
-  console.log("Your routes will be running on http://localhost:9000");
+  });
+
+  app.post("/imageUpload", upload.single("file"), async (req, res) => {
+    //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
+    var file = __dirname + "\\tmp\\" + req.file.originalname;
+    fs.rename(req.file.path, file, function (err) {
+      if (err) {
+        console.log(err);
+        res.send(500);
+      } else {
+        gm()
+        .command('convert')
+        .in(file)
+        .define('jpeg:extent=256kb')
+        .stream(function (err, stdout, stderr){
+          if (err) {
+            console.log("ERROR: ", err);
+          } else {
+            let writeStream = fs.createWriteStream(__dirname + "\\tmp\\playlistImg.jpg");
+            writeStream.on('error', function(e) {console.log("ERR: ",e)});
+            stdout.pipe(writeStream);
+            writeStream.on('finish', function(){
+              res.sendFile(__dirname + "\\tmp\\playlistImg.jpg")
+            });
+          }
+        });
+      }
+    });
+  });
+    
+
+
+  app.listen(9000, () => {
+    console.log("Server is running!");
+    console.log("Your routes will be running on http://localhost:9000");
 });
