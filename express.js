@@ -348,6 +348,13 @@ app.post("/imageUpload", upload.single("file"), async (req, res) => {
 
 app.get("/playlists/:id", cors(), async (req, res) => {
   console.log("playlists id route");
+let expDate = Date.parse(
+    await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
+  );
+  let curDate = new Date();
+  if (curDate > expDate) {
+    refreshSpotifyToken(req.params.id);
+  }
   let accessToken = await redisClient.hgetAsync(
     `${req.params.id}`,
     "accesstoken"
