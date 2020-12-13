@@ -11,7 +11,7 @@ const redisClient = redis.createClient();
 const bluebird = require("bluebird");
 var wkhtmltopdf = require("wkhtmltopdf");
 var cookieParser = require("cookie-parser");
-const qs = require('qs');
+const qs = require("qs");
 const fs = require("fs");
 const gm = require("gm").subClass({ imageMagick: true });
 const multer = require("multer");
@@ -89,7 +89,7 @@ const client = new AuthorizationCode(credentials);
 //Make cookies visible
 app.use(cookieParser());
 //Parse for Image uploads
-var upload = multer({ dest: '/tmp/'});
+var upload = multer({ dest: "/tmp/" });
 //CORS Every Route
 app.use(cors());
 
@@ -223,7 +223,6 @@ async function refreshSpotifyToken(sID) {
   }
 }
 
-
 app.get("/artists/:id/:time", cors(), async (req, res) => {
   console.log(req.params.id);
   let expDate = Date.parse(
@@ -262,7 +261,6 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
           result
         );
       } catch (e) {
-
         console.log(e);
       }
     }
@@ -313,39 +311,73 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
       }
     }
     res.send(result);
-  });
+  }
+});
 
-  app.post("/imageUpload", upload.single("file"), async (req, res) => {
-    //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
-    var file = __dirname + "\\tmp\\" + req.file.originalname;
-    fs.rename(req.file.path, file, function (err) {
-      if (err) {
-        console.log(err);
-        res.send(500);
-      } else {
-        gm()
-        .command('convert')
+app.post("/imageUpload", upload.single("file"), async (req, res) => {
+  //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
+  var file = __dirname + "\\tmp\\" + req.file.originalname;
+  fs.rename(req.file.path, file, function (err) {
+    if (err) {
+      console.log(err);
+      res.send(500);
+    } else {
+      gm()
+        .command("convert")
         .in(file)
-        .define('jpeg:extent=256kb')
-        .stream(function (err, stdout, stderr){
+        .define("jpeg:extent=256kb")
+        .stream(function (err, stdout, stderr) {
           if (err) {
             console.log("ERROR: ", err);
           } else {
-            let writeStream = fs.createWriteStream(__dirname + "\\tmp\\playlistImg.jpg");
-            writeStream.on('error', function(e) {console.log("ERR: ",e)});
+            let writeStream = fs.createWriteStream(
+              __dirname + "\\tmp\\playlistImg.jpg"
+            );
+            writeStream.on("error", function (e) {
+              console.log("ERR: ", e);
+            });
             stdout.pipe(writeStream);
-            writeStream.on('finish', function(){
-              res.sendFile(__dirname + "\\tmp\\playlistImg.jpg")
+            writeStream.on("finish", function () {
+              res.sendFile(__dirname + "\\tmp\\playlistImg.jpg");
             });
           }
         });
-      }
-    });
+    }
   });
-    
+});
 
+app.get("/playlists/:id", cors(), async (req, res) => {
+  console.log("playlists id route");
+  let accessToken = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    "accesstoken"
+  );
+  var result = {};
+  if (accessToken) {
+    try {
+      let uid = req.params.id;
+      if (uid.indexOf("spotify:") === 0) {
+        uid = uid.substring(uid.indexOf(":") + 1, uid.length);
+      }
+      console.log(`uid ${uid}`);
+      const { data } = await axios.get(
+        `https://api.spotify.com/v1/users/${uid}/playlists`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
 
-  app.listen(9000, () => {
-    console.log("Server is running!");
-    console.log("Your routes will be running on http://localhost:9000");
+      result = JSON.stringify(data.items);
+      res.send(result);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    console.log("no access token");
+  }
+});
+
+app.listen(9000, () => {
+  console.log("Server is running!");
+  console.log("Your routes will be running on http://localhost:9000");
 });

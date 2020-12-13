@@ -75,23 +75,20 @@ const Playlists = (props) => {
         // 	setPlaylistData(data.body.items);
         // 	setLoading(false);
         // });
+        console.log("before axios");
         const { data } = await axios.get(
-          `https://api.spotify.com/v1/users/${currentUser.displayName}/playlists`,
-          {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }
+          `http://localhost:9000/playlists/${currentUser.uid}`
         );
-        console.log(data.items);
-        setPlaylistData(data.items);
+        console.log("after axios");
+        console.log(data);
+        setPlaylistData(data);
         setLoading(false);
       } catch (e) {
         console.log(e);
       }
     }
     fetchData();
-  }, [currentUser.displayName]);
+  }, [currentUser.uid]);
 
   const buildCard = (playlist) => {
     return (
