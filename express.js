@@ -9,6 +9,7 @@ const redis = require("redis");
 const cors = require("cors");
 const redisClient = redis.createClient();
 const bluebird = require("bluebird");
+var wkhtmltopdf = require("wkhtmltopdf");
 var cookieParser = require("cookie-parser");
 const qs = require("qs");
 
@@ -246,7 +247,7 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
         var {
           data,
         } = await axios.get(
-          `https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=10`,
+          `https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=20`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         result = JSON.stringify(data.items);
@@ -291,7 +292,7 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
         var {
           data,
         } = await axios.get(
-          `https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=10`,
+          `https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=20`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
