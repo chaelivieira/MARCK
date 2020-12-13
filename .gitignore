@@ -13,6 +13,7 @@
 
 # misc
 /private
+/tmp
 .env
 .eslintcache
 .DS_Store
