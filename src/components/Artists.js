@@ -41,11 +41,11 @@ function Artists() {
       }
     }
     fetchData();
-  }, [term]);
+  }, [term, currentUser.uid]);
   console.log(data);
   const items = data;
   if (artistsLoaded) {
-    if (items === undefined || items.length == 0) {
+    if (items === undefined || items.length === 0) {
       return (
         <div>
           <h2>Sorry.. You dont have any top artists within this time period</h2>

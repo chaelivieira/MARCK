@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { AuthProvider } from "./firebase/Auth";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Login from "./components/Login";
@@ -21,7 +21,7 @@ function App() {
           <div className="App-body">
             <br />
             <Route exact path="/">
-              <Redirect to="/stats" />
+              <Redirect to="/home" />
             </Route>
             <Route exact path="/stats" component={Stats} />
             <Route exact path="/playlists">

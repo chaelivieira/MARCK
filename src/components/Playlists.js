@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import noImage from "../img/download.jpeg";
 import { Link } from "react-router-dom";
-import { Redirect } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
 import "../App.css";
@@ -16,7 +15,6 @@ import {
 } from "@material-ui/core";
 // const bluebird = require('bluebird');
 // const redis = require('redis');
-var SpotifyWebApi = require("spotify-web-api-node");
 // const client = redis.createClient();
 
 // bluebird.promisifyAll(redis.RedisClient.prototype);
@@ -53,7 +51,7 @@ const useStyles = makeStyles({
 
 const Playlists = (props) => {
   let card = null;
-  const regex = /(<([^>]+)>)/gi;
+  //const regex = /(<([^>]+)>)/gi;
   const classes = useStyles();
   const [playlistData, setPlaylistData] = useState(undefined);
   const [loading, setLoading] = useState(true);
