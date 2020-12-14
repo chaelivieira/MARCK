@@ -2,8 +2,9 @@ import React, { useState, useContext, useEffect } from "react";
 import noImage from "../img/download.jpeg";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
-import "../App.css";
+import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
+import "../App.css";
 
 const useStyles = makeStyles({
   card: {
@@ -68,9 +69,15 @@ const PlaylistTracks = (props) => {
       }
     }
     fetchData();
-  }, [currentUser.uid, props.match.params.playlistId]);
+  }, [currentUser, props.match.params.playlistId]);
 
-  if (loading) {
+  if (!currentUser) {
+    return (
+      <div>
+        <Redirect to="/login" />
+      </div>
+    );
+  } else if (loading) {
     return (
       <div>
         <h2>Loading...</h2>

@@ -64,7 +64,6 @@ function SongCard(props) {
               {props.name}
             </Typography>
             <p>
-              {" "}
               Artists:
               <br />
               {props.artists.map((x) => {
