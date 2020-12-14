@@ -2,8 +2,9 @@ import React, { useState, useContext, useEffect } from "react";
 import noImage from "../img/download.jpeg";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
+import { makeStyles } from "@material-ui/core";
 import "../App.css";
-import { makeStyles, List, ListItem } from "@material-ui/core";
 
 const useStyles = makeStyles({
   card: {
@@ -32,10 +33,22 @@ const useStyles = makeStyles({
     fontWeight: "bold",
     fontSize: 12,
   },
+  playlistHeader: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+  },
+  playlistImage: {
+    height: "250px",
+    width: "250px",
+  },
+  playbackContainer: {
+    padding: "20px",
+  },
 });
 
 const PlaylistTracks = (props) => {
-  let track = null;
   const { currentUser } = useContext(AuthContext);
   const [playlistData, setPlaylistData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -56,28 +69,15 @@ const PlaylistTracks = (props) => {
       }
     }
     fetchData();
-  }, [currentUser.uid, props.match.params.playlistId]);
+  }, [currentUser, props.match.params.playlistId]);
 
-  const buildTrack = (track) => {
-    let artistNames = track.track.artists.map((artist) => {
-      return artist.name;
-    });
-    artistNames = artistNames.join(", ");
+  if (!currentUser) {
     return (
-      <ListItem>
-        {track.track.name} by {artistNames}
-      </ListItem>
+      <div>
+        <Redirect to="/login" />
+      </div>
     );
-  };
-  //console.log(`tracks ${JSON.stringify(playlistData.tracks.items[0].track)}`);
-  track =
-    playlistData &&
-    playlistData.tracks &&
-    playlistData.tracks.items.map((track) => {
-      return buildTrack(track);
-    });
-
-  if (loading) {
+  } else if (loading) {
     return (
       <div>
         <h2>Loading...</h2>
@@ -86,28 +86,29 @@ const PlaylistTracks = (props) => {
   } else {
     return (
       <div>
-        <div className="Playlist-tracks-header">
-          <img
-            className="Playlist-tracks-image"
-            src={playlistData.images[0] ? playlistData.images[0].url : noImage}
-            alt={playlistData.name + " playlist art"}
-          />
+        <div className={classes.playlistHeader}>
           <div className="Playlist-tracks-info">
             <h1>{playlistData.name}</h1>
             <h2>{playlistData.description}</h2>
-            <p>by {playlistData.owner.id}</p>
+            <p>A playlist by {playlistData.owner.id}</p>
+            <button>Upload New Playlist Image (not functional yet)</button>
           </div>
+          <img
+            className={classes.playlistImage}
+            src={playlistData.images[0] ? playlistData.images[0].url : noImage}
+            alt={playlistData.name + " playlist art"}
+          />
         </div>
-        <div>
+        <div className={classes.playbackContainer}>
           <iframe
             src={`https://open.spotify.com/embed/playlist/${playlistData.id}`}
+            title={`spotify player for playlist ${playlistData.name}`}
             width="100%"
-            height="380"
-            frameborder="0"
+            height="800"
+            frameborder="4"
             allowtransparency="true"
             allow="encrypted-media"
           ></iframe>
-          <List>{track}</List>
         </div>
       </div>
     );

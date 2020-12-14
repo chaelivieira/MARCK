@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import noImage from "../img/download.jpeg";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
 import "../App.css";
@@ -65,55 +65,62 @@ const Playlists = (props) => {
       }
     }
     fetchData();
-  }, [currentUser.uid]);
+  }, [currentUser]);
 
-  const buildCard = (playlist) => {
-    return (
-      <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={playlist.id}>
-        <Card className={classes.card} variant="outlined">
-          <CardActionArea>
-            <Link to={`/playlists/${playlist.id}`}>
-              <CardMedia
-                className={classes.media}
-                component="img"
-                image={
-                  playlist && playlist.images[0]
-                    ? playlist.images[0].url
-                    : noImage
-                }
-                title="show image"
-              />
-
-              <CardContent>
-                <Typography
-                  className={classes.titleHead}
-                  gutterBottom
-                  variant="h6"
-                  component="h3"
-                >
-                  {playlist.name}
-                </Typography>
-                <p>Tracks: {playlist.tracks.total}</p>
-              </CardContent>
-            </Link>
-          </CardActionArea>
-        </Card>
-      </Grid>
-    );
-  };
-  card =
-    playlistData &&
-    playlistData.map((playlist) => {
-      return buildCard(playlist);
-    });
-
-  if (loading) {
+  if (!currentUser) {
     return (
       <div>
-        <h2>Loading....</h2>
+        <Redirect to="/login" />
+      </div>
+    );
+  } else if (loading) {
+    return (
+      <div>
+        <h2>Loading...</h2>
       </div>
     );
   } else {
+    const buildCard = (playlist) => {
+      return (
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={playlist.id}>
+          <Card className={classes.card} variant="outlined">
+            <CardActionArea>
+              <Link to={`/playlists/${playlist.id}`}>
+                <CardMedia
+                  className={classes.media}
+                  component="img"
+                  image={
+                    playlist && playlist.images[0]
+                      ? playlist.images[0].url
+                      : noImage
+                  }
+                  title="show image"
+                />
+
+                <CardContent>
+                  <Typography
+                    className={classes.titleHead}
+                    gutterBottom
+                    variant="h6"
+                    component="h3"
+                  >
+                    {playlist.name}
+                  </Typography>
+                  <p>Tracks: {playlist.tracks.total}</p>
+                </CardContent>
+              </Link>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      );
+    };
+
+    card =
+      playlistData &&
+      playlistData.map((playlist) => {
+        return buildCard(playlist);
+      });
+
     return (
       <div>
         <br />
