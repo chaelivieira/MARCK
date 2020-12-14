@@ -9,8 +9,8 @@ const redis = require("redis");
 const cors = require("cors");
 const redisClient = redis.createClient();
 const bluebird = require("bluebird");
-var wkhtmltopdf = require("wkhtmltopdf");
-var cookieParser = require("cookie-parser");
+let wkhtmltopdf = require("wkhtmltopdf");
+let cookieParser = require("cookie-parser");
 const qs = require("qs");
 const fs = require("fs");
 const gm = require("gm").subClass({ imageMagick: true });
@@ -65,12 +65,12 @@ function signInFirebaseTemplate(token, spotifyAccessToken) {
   return `
     <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
     <script>
-      var token = '${token}';
+      let token = '${token}';
       window.opener.postMessage(token, '*');
       window.close();
     </script>`;
 }
-var clientID = "d8da61601d4d4dc88adf729228b3cf02";
+let clientID = "d8da61601d4d4dc88adf729228b3cf02";
 //Creds for login page & Auth code setup
 const credentials = {
   client: {
@@ -89,7 +89,7 @@ const client = new AuthorizationCode(credentials);
 //Make cookies visible
 app.use(cookieParser());
 //Parse for Image uploads
-var upload = multer({ dest: "/tmp/" });
+let upload = multer({ dest: "/tmp/" });
 //CORS Every Route
 app.use(cors());
 
@@ -134,8 +134,7 @@ app.get("/spotify-callback", async (req, res) => {
   } else if (req.cookies.state !== req.query.state) {
     res.status(400).send("State validation failed");
     return;
-  }
-  else if (! req.query || !req.query.code){
+  } else if (!req.query || !req.query.code) {
     res.status(400).send("Bad Login Attempt");
   }
 
@@ -169,7 +168,7 @@ app.get("/spotify-callback", async (req, res) => {
             : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
 
         try {
-          var firebaseToken = await createFirebaseAccount(
+          let firebaseToken = await createFirebaseAccount(
             id,
             displayname,
             image
@@ -197,7 +196,7 @@ app.get("/spotify-callback", async (req, res) => {
 async function refreshSpotifyToken(sID) {
   let refreshToken = await redisClient.hgetAsync(`${sID}`, "refreshToken");
   console.log("Pre-Re: ", refreshToken);
-  var base64 = new Buffer.from(
+  let base64 = new Buffer.from(
     clientID + ":" + process.env.SPOTIFY_SECRET
   ).toString("base64");
 
@@ -248,10 +247,10 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
       `${req.params.id}`,
       "accesstoken"
     );
-    var result = {};
+    let result = {};
     if (accessToken) {
       try {
-        var {
+        let {
           data,
         } = await axios.get(
           `https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=20`,
@@ -293,7 +292,7 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
       `${req.params.id}`,
       "accesstoken"
     );
-    var result = {};
+    let result = {};
     if (accessToken) {
       try {
         var {
@@ -319,7 +318,7 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
 
 app.post("/imageUpload", upload.single("file"), async (req, res) => {
   //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
-  var file = __dirname + "\\tmp\\" + req.file.originalname;
+  let file = __dirname + "\\tmp\\" + req.file.originalname;
   fs.rename(req.file.path, file, function (err) {
     if (err) {
       console.log(err);
@@ -361,7 +360,7 @@ app.get("/playlists/:id", cors(), async (req, res) => {
     `${req.params.id}`,
     "accesstoken"
   );
-  var result = {};
+  let result = {};
   if (accessToken) {
     try {
       let uid = req.params.id;
@@ -397,7 +396,7 @@ app.get("/playlists/:id/:playlistId", cors(), async (req, res) => {
     `${req.params.id}`,
     "accesstoken"
   );
-  var result = {};
+  let result = {};
   if (accessToken) {
     try {
       const { data } = await axios.get(

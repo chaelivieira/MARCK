@@ -5,18 +5,23 @@ import "../App.css";
 
 function Nav() {
   const { currentUser } = useContext(AuthContext);
-
-  return (
-    <nav>
-      <NavLink to="/playlists">Playlists</NavLink>
-      <NavLink to="/stats">Stats</NavLink>
-      {currentUser === null ? (
-        <NavLink to="/login">Log in</NavLink>
-      ) : (
+  if (currentUser) {
+    return (
+      <nav>
+        <NavLink to="/playlists">Playlists</NavLink>
+        <NavLink to="/stats">Stats</NavLink>
         <NavLink to="/logout">Log out</NavLink>
-      )}
-    </nav>
-  );
+      </nav>
+    );
+  } else {
+    return (
+      <nav>
+        <NavLink to="/login">Playlists</NavLink>
+        <NavLink to="/login">Stats</NavLink>
+        <NavLink to="/login">Log in</NavLink>
+      </nav>
+    );
+  }
 }
 
 export default Nav;
