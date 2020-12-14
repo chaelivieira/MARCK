@@ -3,7 +3,7 @@ import noImage from "../img/download.jpeg";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
 import "../App.css";
-import { makeStyles, List, ListItem } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles({
   card: {
@@ -48,7 +48,6 @@ const useStyles = makeStyles({
 });
 
 const PlaylistTracks = (props) => {
-  let track = null;
   const { currentUser } = useContext(AuthContext);
   const [playlistData, setPlaylistData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,25 +69,6 @@ const PlaylistTracks = (props) => {
     }
     fetchData();
   }, [currentUser.uid, props.match.params.playlistId]);
-
-  const buildTrack = (track) => {
-    let artistNames = track.track.artists.map((artist) => {
-      return artist.name;
-    });
-    artistNames = artistNames.join(", ");
-    return (
-      <ListItem>
-        {track.track.name} by {artistNames}
-      </ListItem>
-    );
-  };
-  //console.log(`tracks ${JSON.stringify(playlistData.tracks.items[0].track)}`);
-  track =
-    playlistData &&
-    playlistData.tracks &&
-    playlistData.tracks.items.map((track) => {
-      return buildTrack(track);
-    });
 
   if (loading) {
     return (
@@ -122,7 +102,6 @@ const PlaylistTracks = (props) => {
             allowtransparency="true"
             allow="encrypted-media"
           ></iframe>
-          {/**<List>{track}</List>*/}
         </div>
       </div>
     );

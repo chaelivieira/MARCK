@@ -25,21 +25,12 @@ function App() {
               <Redirect to="/home" />
             </Route>
             <Route exact path="/home" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/logout" component={Logout} />
             <Route exact path="/stats" component={Stats} />
-            <Route exact path="/playlists">
-              <Playlists />
-            </Route>
-            <Route
-              exact
-              path="/playlists/:playlistId"
-              component={PlaylistTracks}
-            />
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/logout">
-              <Logout />
-            </Route>
+            <Route exact path="/playlists" component={Playlists} />
+            {/* prettier-ignore */}
+            <Route exact path="/playlists/:playlistId" component={PlaylistTracks} />
           </div>
         </div>
       </Router>
