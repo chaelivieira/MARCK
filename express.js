@@ -168,7 +168,7 @@ app.get("/spotify-callback", async (req, res) => {
             : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
 
         try {
-          let firebaseToken = await createFirebaseAccount(
+          var firebaseToken = await createFirebaseAccount(
             id,
             displayname,
             image
