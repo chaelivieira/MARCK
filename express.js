@@ -134,8 +134,7 @@ app.get("/spotify-callback", async (req, res) => {
   } else if (req.cookies.state !== req.query.state) {
     res.status(400).send("State validation failed");
     return;
-  }
-  else if (! req.query || !req.query.code){
+  } else if (!req.query || !req.query.code) {
     res.status(400).send("Bad Login Attempt");
   }
 
@@ -153,7 +152,7 @@ app.get("/spotify-callback", async (req, res) => {
         const expiresAt = results.token.expires_at;
 
         try {
-          let { data } = await axios.get("https://api.spotify.com/v1/me", {
+          var { data } = await axios.get("https://api.spotify.com/v1/me", {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
         } catch (e) {
@@ -296,7 +295,7 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
     let result = {};
     if (accessToken) {
       try {
-        let {
+        var {
           data,
         } = await axios.get(
           `https://api.spotify.com/v1/me/top/tracks?time_range=${req.params.time}&limit=20`,
