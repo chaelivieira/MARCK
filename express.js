@@ -12,6 +12,10 @@ const bluebird = require("bluebird");
 var wkhtmltopdf = require("wkhtmltopdf");
 var cookieParser = require("cookie-parser");
 const qs = require("qs");
+let MyLibrary;
+if (typeof document !== "undefined") {
+  MyLibrary = require("my-library").default;
+}
 
 require("dotenv").config();
 
@@ -309,6 +313,52 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
     res.send(result);
   }
 });
+app.get("/stats/:id", cors(), async (req, res) => {
+  let tracksInfo = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    `tracks-long_term`
+  );
+  let artistsInfo = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    `artists-long_term`
+  );
+  var t = JSON.parse(tracksInfo);
+  var a = JSON.parse(artistsInfo);
+  var trackList = [];
+  {
+    t.map((item) => {
+      trackList.push(item.name);
+    });
+  }
+  var artistList = [];
+  {
+    a.map((item) => {
+      artistList.push(item.name);
+    });
+  }
+  ul = document.createElement("ol");
+
+  document.getElementById("tracks").appendChild(ul);
+
+  trackList.forEach(function (item) {
+    let li = document.createElement("li");
+    ul.appendChild(li);
+
+    li.innerHTML += item;
+  });
+  console.log(tracks);
+
+  var htmlContent = `<h1>Test</h1><p>Hello world</p>`;
+  try {
+    wkhtmltopdf(ul, {
+      output: "projecttest4.pdf",
+      pageSize: "letter",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.listen(9000, () => {
   console.log("Server is running!");
   console.log("Your routes will be running on http://localhost:9000");
