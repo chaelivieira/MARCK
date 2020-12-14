@@ -15,6 +15,8 @@ const qs = require("qs");
 const fs = require("fs");
 const gm = require("gm").subClass({ imageMagick: true });
 const multer = require("multer");
+var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyApi = new SpotifyWebApi();
 require("dotenv").config();
 
 //Promisify Redis
@@ -115,7 +117,7 @@ app.get("/login-redirect", (req, res) => {
   });
   const redirectUri = client.authorizeURL({
     redirect_uri: `http://localhost:9000/spotify-callback`,
-    scope: "user-read-private user-top-read",
+    scope: "user-read-private user-top-read playlist-read-private playlist-modify-public playlist-modify-private ugc-image-upload",
     state: state,
   });
   res.redirect(redirectUri);
@@ -168,7 +170,7 @@ app.get("/spotify-callback", async (req, res) => {
             : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
 
         try {
-          let firebaseToken = await createFirebaseAccount(
+          var firebaseToken = await createFirebaseAccount(
             id,
             displayname,
             image
@@ -201,7 +203,7 @@ async function refreshSpotifyToken(sID) {
   ).toString("base64");
 
   try {
-    let { data } = await axios.post(
+    var { data } = await axios.post(
       `https://accounts.spotify.com/api/token`,
       qs.stringify({
         grant_type: "refresh_token",
@@ -360,36 +362,76 @@ app.post("/pdf", cors(), async (req, res) => {
 
 app.post("/imageUpload", upload.single("file"), async (req, res) => {
   //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
-  let file = __dirname + "\\tmp\\" + req.file.originalname;
-  fs.rename(req.file.path, file, function (err) {
-    if (err) {
-      console.log(err);
-      res.send(500);
-    } else {
-      gm()
-        .command("convert")
-        .in(file)
-        .define("jpeg:extent=256kb")
-        .stream(function (err, stdout, stderr) {
-          if (err) {
-            console.log("ERROR: ", err);
-          } else {
-            let writeStream = fs.createWriteStream(
-              __dirname + "\\tmp\\playlistImg.jpg"
-            );
-            writeStream.on("error", function (e) {
-              console.log("ERR: ", e);
+  req.params.id = 'spotify:dragonguy128';
+  let expDate = Date.parse(
+    await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
+  );
+  let curDate = new Date();
+  if (curDate > expDate) {
+    refreshSpotifyToken(req.params.id);
+  }
+  let accessToken = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    "accesstoken"
+  );
+  if (accessToken) {
+    spotifyApi.setAccessToken(accessToken);
+    try {
+      var file = __dirname + "\\tmp\\" + req.file.originalname;
+      fs.rename(req.file.path, file, function (err) {
+        if (err) {
+          console.log(err);
+          res.send(500);
+        } else {
+          gm()
+            .command("convert")
+            .in(file)
+            .define("jpeg:extent=256kb")
+            .stream(function (err, stdout, stderr) {
+              if (err) {
+                console.log("ERROR: ", err);
+              } else {
+                let writeStream = fs.createWriteStream(
+                  __dirname + "\\tmp\\playlistImg.jpg"
+                );
+                writeStream.on("error", function (e) {
+                  console.log("ERR: ", e);
+                });
+                stdout.pipe(writeStream);
+                writeStream.on("finish", async function () {
+                  let send = Buffer.from(__dirname + "\\tmp\\playlistImg.jpg", 'binary').toString('base64');
+                  // console.log(send);
+                  spotifyApi.uploadCustomPlaylistCoverImage('3mmEWYnR0nFqQfKKIwEWZx', send)
+                    .then(function(data) {
+                      console.log('Playlsit cover image uploaded!');
+                    }, function(err) {
+                      console.log('Something went wrong!', err);
+                    }
+                  // let { data } = await axios.put(
+                  //   `https://api.spotify.com/v1/playlists/3mmEWYnR0nFqQfKKIwEWZx/images`,
+                  //   send,
+                  //   {
+                  //     headers: { 
+                  //       Authorization: `Bearer ${accessToken}`,
+                  //       "Content-Type": "image/jpeg"
+                  //     },
+                  //   }
+                  );
+                  // console.log(data);
+                });
+              }
             });
-            stdout.pipe(writeStream);
-            writeStream.on("finish", function () {
-              res.sendFile(__dirname + "\\tmp\\playlistImg.jpg");
-            });
-          }
-        });
+        }
+      });
+    } catch (e) {
+      console.log(e);
     }
-  });
+  } else {
+    console.log("no access token");
+  }
 });
 
+// Get all the playlists of the current user
 app.get("/playlists/:id", cors(), async (req, res) => {
   let expDate = Date.parse(
     await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
@@ -426,6 +468,97 @@ app.get("/playlists/:id", cors(), async (req, res) => {
   }
 });
 
+// Create a playlist of the artist's top tracks
+app.post("/playlists/:id/:artistId", cors(), async(req, res) => {
+
+  let expDate = Date.parse(
+    await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
+  );
+  let curDate = new Date();
+  if (curDate > expDate) {
+    refreshSpotifyToken(req.params.id);
+  }
+  let accessToken = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    "accesstoken"
+  );
+  var result = {};
+  if (accessToken) {
+    try {
+      let uid = req.params.id;
+      if (uid.indexOf("spotify:") === 0) {
+        uid = uid.substring(uid.indexOf(":") + 1, uid.length);
+      }
+      const { data } = await axios.get(
+        `https://api.spotify.com/v1/artists/${req.params.artistId}/top-tracks?country=us`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      );
+
+      let tracks = data.tracks;
+      
+      //result = JSON.stringify(data);
+      //res.send(result);
+      let artists = tracks[0].artists;  
+      let artistName = "";
+      
+
+      for (let i = 0; i < artists.length; i++){
+        if (artists[i].id === req.params.artistId){
+          artistName = artists[i].name;
+        }
+      }
+     
+      const playlist = await axios.post(
+        `https://api.spotify.com/v1/users/${uid}/playlists`,
+        {
+          name: "Top Tracks from " + artistName,
+          public: false,
+          description: "Generated by Unwrapped :)"
+        },
+        {
+          headers: { 
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
+      let playlistData = playlist.data;
+      //let playlistData = JSON.stringify(playlist.data);
+      //res.send(playlistData);
+
+      let trackArr = [];
+      for (let i = 0; i < tracks.length; i++){
+        trackArr.push(tracks[i].uri);
+      }
+      
+      let trackBody = {
+        "uris":trackArr
+      }
+      const addToPlaylist = await axios.post(
+        `https://api.spotify.com/v1/playlists/${playlistData.id}/tracks`,
+        trackBody,
+        {
+          headers: { 
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      let addToPlayData = JSON.stringify(addToPlaylist.data);
+      res.send(addToPlayData);
+
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    console.log("no access token");
+  }
+});
+
+// Get a specific playlist
 app.get("/playlists/:id/:playlistId", cors(), async (req, res) => {
   let expDate = Date.parse(
     await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
