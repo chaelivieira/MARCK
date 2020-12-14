@@ -9,12 +9,45 @@ const axios = require("axios");
 
 function Stats() {
   const { currentUser } = useContext(AuthContext);
-  const handle_pdf = async () => {
+  function makeOL(array) {
+    var list = document.createElement("ol");
+    for (var i = 0; i < array.length; i++) {
+      var item = document.createElement("li");
+      item.appendChild(document.createTextNode(array[i]));
+      list.appendChild(item);
+    }
+    return list;
+  }
+  async function getData() {
     try {
-      await axios.get(`http://localhost:9000/stats/${currentUser.uid}`);
+      var data = await axios.get(
+        `http://localhost:9000/stats/${currentUser.uid}`
+      );
+      return data;
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async function sendData(html) {
+    try {
+      await axios.post(`http://localhost:9000/pdf`, html);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const handle_pdf = async () => {
+    const data = getData();
+    var item = document.createElement("h2");
+    item.appendChild(document.createTextNode("Top Artists"));
+    document.getElementById("Stats").appendChild(item);
+    document.getElementById("Stats").appendChild(makeOL(data.artists));
+    item = document.createElement("h2");
+    item.appendChild(document.createTextNode("Top Songs"));
+    document.getElementById("Stats").appendChild(item);
+    document.getElementById("Stats").appendChild(makeOL(data.tracks));
+    sendData(document.getElementById("Stats"));
   };
   return (
     <div>

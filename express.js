@@ -338,20 +338,26 @@ app.get("/stats/:id", cors(), async (req, res) => {
       artistList.push(item.name);
     });
   }
+  const info = {
+    artists: artistList,
+    tracks: trackList,
+  };
+  result = JSON.stringify(info);
+  res.send(result);
+});
 
-  console.log(tracks);
-
-  var htmlContent = `<h1>Test</h1><p>Hello world</p>`;
+app.post("/pdf", cors(), async (req, res) => {
+  var htmlContent = req.body;
   try {
-    wkhtmltopdf(ul, {
-      output: "projecttest4.pdf",
+    wkhtmltopdf(htmlContent, {
+      output: "topStats.pdf",
       pageSize: "letter",
     });
   } catch (e) {
     console.log(e);
   }
 });
-/*
+
 app.post("/imageUpload", upload.single("file"), async (req, res) => {
   //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
   let file = __dirname + "\\tmp\\" + req.file.originalname;
@@ -451,7 +457,7 @@ app.get("/playlists/:id/:playlistId", cors(), async (req, res) => {
     console.log("no access token");
   }
 });
-*/
+
 app.listen(9000, () => {
   console.log("Server is running!");
   console.log("Your routes will be running on http://localhost:9000");
