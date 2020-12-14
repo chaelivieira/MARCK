@@ -201,7 +201,7 @@ async function refreshSpotifyToken(sID) {
   ).toString("base64");
 
   try {
-    let { data } = await axios.post(
+    var { data } = await axios.post(
       `https://accounts.spotify.com/api/token`,
       qs.stringify({
         grant_type: "refresh_token",
