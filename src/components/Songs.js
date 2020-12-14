@@ -41,10 +41,10 @@ function Songs() {
       }
     }
     fetchData();
-  }, [term]);
+  }, [term, currentUser.uid]);
   const items = data;
   if (artistsLoaded) {
-    if (items === undefined || items.length == 0) {
+    if (items === undefined || items.length === 0) {
       return (
         <div>
           <h2>Sorry.. You dont have any top songs within this time period</h2>

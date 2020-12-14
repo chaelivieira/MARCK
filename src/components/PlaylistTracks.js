@@ -1,7 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import noImage from "../img/download.jpeg";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
 import "../App.css";
@@ -41,6 +39,7 @@ const PlaylistTracks = (props) => {
   const { currentUser } = useContext(AuthContext);
   const [playlistData, setPlaylistData] = useState(null);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line
   const classes = useStyles();
 
   useEffect(() => {
@@ -57,7 +56,7 @@ const PlaylistTracks = (props) => {
       }
     }
     fetchData();
-  }, [currentUser.uid]);
+  }, [currentUser.uid, props.match.params.playlistId]);
 
   const buildTrack = (track) => {
     let artistNames = track.track.artists.map((artist) => {
@@ -91,6 +90,7 @@ const PlaylistTracks = (props) => {
           <img
             className="Playlist-tracks-image"
             src={playlistData.images[0] ? playlistData.images[0].url : noImage}
+            alt={playlistData.name + " playlist art"}
           />
           <div className="Playlist-tracks-info">
             <h1>{playlistData.name}</h1>

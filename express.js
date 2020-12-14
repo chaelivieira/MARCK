@@ -135,6 +135,9 @@ app.get("/spotify-callback", async (req, res) => {
     res.status(400).send("State validation failed");
     return;
   }
+  else if (! req.query || !req.query.code){
+    res.status(400).send("Bad Login Attempt");
+  }
 
   try {
     // Exchange the auth code for an access token.
