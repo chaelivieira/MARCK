@@ -1,6 +1,7 @@
 import React from "react";
 import { AuthProvider } from "./firebase/Auth";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import Playlists from "./components/Playlists";
@@ -23,6 +24,7 @@ function App() {
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
+            <Route exact path="/home" component={Home} />
             <Route exact path="/stats" component={Stats} />
             <Route exact path="/playlists">
               <Playlists />
