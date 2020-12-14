@@ -9,14 +9,12 @@ const redis = require("redis");
 const cors = require("cors");
 const redisClient = redis.createClient();
 const bluebird = require("bluebird");
-var wkhtmltopdf = require("wkhtmltopdf");
-var cookieParser = require("cookie-parser");
+let wkhtmltopdf = require("wkhtmltopdf");
+let cookieParser = require("cookie-parser");
 const qs = require("qs");
-let MyLibrary;
-if (typeof document !== "undefined") {
-  MyLibrary = require("my-library").default;
-}
-
+const fs = require("fs");
+const gm = require("gm").subClass({ imageMagick: true });
+const multer = require("multer");
 require("dotenv").config();
 
 //Promisify Redis
@@ -67,12 +65,12 @@ function signInFirebaseTemplate(token, spotifyAccessToken) {
   return `
     <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
     <script>
-      var token = '${token}';
+      let token = '${token}';
       window.opener.postMessage(token, '*');
       window.close();
     </script>`;
 }
-var clientID = "d8da61601d4d4dc88adf729228b3cf02";
+let clientID = "d8da61601d4d4dc88adf729228b3cf02";
 //Creds for login page & Auth code setup
 const credentials = {
   client: {
@@ -90,7 +88,9 @@ const client = new AuthorizationCode(credentials);
 
 //Make cookies visible
 app.use(cookieParser());
-
+//Parse for Image uploads
+let upload = multer({ dest: "/tmp/" });
+//CORS Every Route
 app.use(cors());
 
 //Deliver Production react
@@ -134,6 +134,8 @@ app.get("/spotify-callback", async (req, res) => {
   } else if (req.cookies.state !== req.query.state) {
     res.status(400).send("State validation failed");
     return;
+  } else if (!req.query || !req.query.code) {
+    res.status(400).send("Bad Login Attempt");
   }
 
   try {
@@ -166,7 +168,7 @@ app.get("/spotify-callback", async (req, res) => {
             : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
 
         try {
-          var firebaseToken = await createFirebaseAccount(
+          let firebaseToken = await createFirebaseAccount(
             id,
             displayname,
             image
@@ -194,7 +196,7 @@ app.get("/spotify-callback", async (req, res) => {
 async function refreshSpotifyToken(sID) {
   let refreshToken = await redisClient.hgetAsync(`${sID}`, "refreshToken");
   console.log("Pre-Re: ", refreshToken);
-  var base64 = new Buffer.from(
+  let base64 = new Buffer.from(
     clientID + ":" + process.env.SPOTIFY_SECRET
   ).toString("base64");
 
@@ -245,10 +247,10 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
       `${req.params.id}`,
       "accesstoken"
     );
-    var result = {};
+    let result = {};
     if (accessToken) {
       try {
-        var {
+        let {
           data,
         } = await axios.get(
           `https://api.spotify.com/v1/me/top/artists?time_range=${req.params.time}&limit=20`,
@@ -290,7 +292,7 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
       `${req.params.id}`,
       "accesstoken"
     );
-    var result = {};
+    let result = {};
     if (accessToken) {
       try {
         var {
@@ -336,16 +338,7 @@ app.get("/stats/:id", cors(), async (req, res) => {
       artistList.push(item.name);
     });
   }
-  ul = document.createElement("ol");
 
-  document.getElementById("tracks").appendChild(ul);
-
-  trackList.forEach(function (item) {
-    let li = document.createElement("li");
-    ul.appendChild(li);
-
-    li.innerHTML += item;
-  });
   console.log(tracks);
 
   var htmlContent = `<h1>Test</h1><p>Hello world</p>`;
@@ -358,7 +351,107 @@ app.get("/stats/:id", cors(), async (req, res) => {
     console.log(e);
   }
 });
+/*
+app.post("/imageUpload", upload.single("file"), async (req, res) => {
+  //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
+  let file = __dirname + "\\tmp\\" + req.file.originalname;
+  fs.rename(req.file.path, file, function (err) {
+    if (err) {
+      console.log(err);
+      res.send(500);
+    } else {
+      gm()
+        .command("convert")
+        .in(file)
+        .define("jpeg:extent=256kb")
+        .stream(function (err, stdout, stderr) {
+          if (err) {
+            console.log("ERROR: ", err);
+          } else {
+            let writeStream = fs.createWriteStream(
+              __dirname + "\\tmp\\playlistImg.jpg"
+            );
+            writeStream.on("error", function (e) {
+              console.log("ERR: ", e);
+            });
+            stdout.pipe(writeStream);
+            writeStream.on("finish", function () {
+              res.sendFile(__dirname + "\\tmp\\playlistImg.jpg");
+            });
+          }
+        });
+    }
+  });
+});
 
+app.get("/playlists/:id", cors(), async (req, res) => {
+  let expDate = Date.parse(
+    await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
+  );
+  let curDate = new Date();
+  if (curDate > expDate) {
+    refreshSpotifyToken(req.params.id);
+  }
+  let accessToken = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    "accesstoken"
+  );
+  let result = {};
+  if (accessToken) {
+    try {
+      let uid = req.params.id;
+      if (uid.indexOf("spotify:") === 0) {
+        uid = uid.substring(uid.indexOf(":") + 1, uid.length);
+      }
+      const { data } = await axios.get(
+        `https://api.spotify.com/v1/users/${uid}/playlists`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      result = JSON.stringify(data.items);
+      res.send(result);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    console.log("no access token");
+  }
+});
+
+app.get("/playlists/:id/:playlistId", cors(), async (req, res) => {
+  let expDate = Date.parse(
+    await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
+  );
+  let curDate = new Date();
+  if (curDate > expDate) {
+    refreshSpotifyToken(req.params.id);
+  }
+  let accessToken = await redisClient.hgetAsync(
+    `${req.params.id}`,
+    "accesstoken"
+  );
+  let result = {};
+  if (accessToken) {
+    try {
+      const { data } = await axios.get(
+        `https://api.spotify.com/v1/playlists/${req.params.playlistId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      result = JSON.stringify(data);
+      res.send(result);
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    console.log("no access token");
+  }
+});
+*/
 app.listen(9000, () => {
   console.log("Server is running!");
   console.log("Your routes will be running on http://localhost:9000");

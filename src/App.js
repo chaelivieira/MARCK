@@ -1,50 +1,44 @@
-import React, { useState } from "react";
+import React from "react";
 import { AuthProvider } from "./firebase/Auth";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import Playlists from "./components/Playlists";
+import PlaylistTracks from "./components/PlaylistTracks";
 import Stats from "./components/Stats";
+import Nav from "./components/Nav";
 import "./App.css";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-
-  const receiveUserData = (data) => {
-    setCurrentUser(data);
-  };
-
   return (
     <AuthProvider>
       <Router>
         <div className="App">
           <header className="App-header">
             <h1 className="Header-title">Unwrapped</h1>
-            <nav>
-              <NavLink to="/playlists">Playlists</NavLink>
-              <NavLink to="/stats">Stats</NavLink>
-              {currentUser === null ? (
-                <NavLink to="/login">Log in</NavLink>
-              ) : (
-                <NavLink to="/logout">Log out</NavLink>
-              )}
-            </nav>
+            <Nav />
           </header>
           <div className="App-body">
             <br />
             <Route exact path="/">
-              <Redirect to="/stats" />
+              <Redirect to="/home" />
             </Route>
-            <Route path="/stats" component={Stats} />
-            <Route path="/playlists">
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/stats" component={Stats} />
+            <Route exact path="/playlists">
               <Playlists />
             </Route>
-            <Route path="/login">
-              <Login onLogIn={receiveUserData} />
+            <Route
+              exact
+              path="/playlists/:playlistId"
+              component={PlaylistTracks}
+            />
+            <Route exact path="/login">
+              <Login />
             </Route>
-            <Route path="/logout">
-              <Logout onLogOut={receiveUserData} />
+            <Route exact path="/logout">
+              <Logout />
             </Route>
           </div>
         </div>
