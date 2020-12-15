@@ -499,7 +499,7 @@ app.post("/playlists/:id/:artistId", cors(), async(req, res) => {
       
       let playlistData = playlist.data;
       //let playlistData = JSON.stringify(playlist.data);
-      //res.send(playlistData);
+      
 
       let trackArr = [];
       for (let i = 0; i < tracks.length; i++){
@@ -519,8 +519,10 @@ app.post("/playlists/:id/:artistId", cors(), async(req, res) => {
           }
         }
       );
-      let addToPlayData = JSON.stringify(addToPlaylist.data);
-      res.send(addToPlayData);
+      res.send(playlistData.id);
+
+      //let addToPlayData = JSON.stringify(addToPlaylist.data);
+      //res.send(addToPlayData);
 
     } catch (e) {
       console.log(e);
