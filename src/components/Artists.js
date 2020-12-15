@@ -4,6 +4,7 @@ import { AuthContext } from "../firebase/Auth";
 import ArtistCard from "./ArtistCard";
 import "../App.css";
 import { Grid, makeStyles } from "@material-ui/core";
+import { v4 as uuidv4 } from "uuid";
 const axios = require("axios");
 const useStyles = makeStyles({
   grid: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles({
 function Artists() {
   const classes = useStyles();
   const [data, setData] = useState({});
-  const [term, setTerm] = useState("short_term");
+  const [term, setTerm] = useState("long_term");
   const [artistsLoaded, setArtistsLoaded] = useState(false);
   const { currentUser } = useContext(AuthContext);
 
@@ -42,14 +43,16 @@ function Artists() {
     }
     fetchData();
   }, [term, currentUser.uid]);
-  console.log(data);
   const items = data;
   if (artistsLoaded) {
     if (items === undefined || items.length === 0) {
       return (
-        <div>
-          <h2>Sorry.. You dont have any top artists within this time period</h2>
+        <div key={uuidv4()}>
+          <h2 key={uuidv4()}>
+            Sorry.. You dont have any top artists within this time period
+          </h2>
           <Button
+            key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
             onClick={handleShort_term}
@@ -57,13 +60,19 @@ function Artists() {
             This Month
           </Button>
           <Button
+            key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
             onClick={handleMedium_term}
           >
             This Year
           </Button>
-          <Button variant="secondary  mr-1" size="lg" onClick={handleLong_term}>
+          <Button
+            key={uuidv4()}
+            variant="secondary  mr-1"
+            size="lg"
+            onClick={handleLong_term}
+          >
             All Time
           </Button>
         </div>
@@ -72,6 +81,7 @@ function Artists() {
       return (
         <div>
           <Button
+            key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
             onClick={handleShort_term}
@@ -79,22 +89,29 @@ function Artists() {
             This Month
           </Button>
           <Button
+            key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
             onClick={handleMedium_term}
           >
             This Year
           </Button>
-          <Button variant="secondary  mr-1" size="lg" onClick={handleLong_term}>
+          <Button
+            key={uuidv4()}
+            variant="secondary  mr-1"
+            size="lg"
+            onClick={handleLong_term}
+          >
             All Time
           </Button>
           <br />
           <br></br>
-          <div>
-            <Grid container className={classes.grid} spacing={5}>
+          <div key={uuidv4()}>
+            <Grid key={uuidv4()} container className={classes.grid} spacing={5}>
               {items.map((post) => {
                 return (
                   <ArtistCard
+                    key={uuidv4()}
                     id={post.id}
                     name={post.name}
                     url={post.images[0].url}
@@ -111,13 +128,28 @@ function Artists() {
   } else {
     return (
       <div>
-        <Button variant="secondary  mr-1" size="lg" onClick={handleShort_term}>
+        <Button
+          key={uuidv4()}
+          variant="secondary  mr-1"
+          size="lg"
+          onClick={handleShort_term}
+        >
           This Month
         </Button>
-        <Button variant="secondary  mr-1" size="lg" onClick={handleMedium_term}>
+        <Button
+          key={uuidv4()}
+          variant="secondary  mr-1"
+          size="lg"
+          onClick={handleMedium_term}
+        >
           This Year
         </Button>
-        <Button variant="secondary  mr-1" size="lg" onClick={handleLong_term}>
+        <Button
+          key={uuidv4()}
+          variant="secondary  mr-1"
+          size="lg"
+          onClick={handleLong_term}
+        >
           All Time
         </Button>
       </div>
