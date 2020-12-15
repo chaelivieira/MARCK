@@ -7,18 +7,30 @@ function Nav() {
   const { currentUser } = useContext(AuthContext);
   if (currentUser) {
     return (
-      <nav>
-        <NavLink to="/playlists">Playlists</NavLink>
-        <NavLink to="/stats">Stats</NavLink>
-        <NavLink to="/logout">Log out</NavLink>
+      <nav className="nav">
+        <NavLink to="/playlists" className="navlink">
+          Playlists
+        </NavLink>
+        <NavLink to="/stats" className="navlink">
+          Stats
+        </NavLink>
+        <NavLink to="/logout" className="navlink">
+          Log out
+        </NavLink>
       </nav>
     );
   } else {
     return (
-      <nav>
-        <NavLink to="/login">Playlists</NavLink>
-        <NavLink to="/login">Stats</NavLink>
-        <NavLink to="/login">Log in</NavLink>
+      <nav className="nav">
+        <NavLink to="/login" className="navlink">
+          Playlists
+        </NavLink>
+        <NavLink to="/login" className="navlink">
+          Stats
+        </NavLink>
+        <NavLink to="/login" className="navlink">
+          Log in
+        </NavLink>
       </nav>
     );
   }

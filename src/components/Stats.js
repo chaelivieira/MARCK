@@ -83,10 +83,10 @@ function Stats() {
           <br></br>
           <div id="foo"></div>
           <h1>Top Songs:</h1>
-          <Songs></Songs>
+          <Songs />
           <br />
           <h1>Top Artists:</h1>
-          <Artists></Artists>
+          <Artists />
         </div>
       )}
       ;

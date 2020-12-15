@@ -1,6 +1,11 @@
 import React from "react";
 import { AuthProvider } from "./firebase/Auth";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Link,
+} from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
@@ -16,7 +21,11 @@ function App() {
       <Router>
         <div className="App">
           <header className="App-header">
-            <h1 className="Header-title">Unwrapped</h1>
+            <h1>
+              <Link to="/home" className="Header-link">
+                Unwrapped
+              </Link>
+            </h1>
             <Nav />
           </header>
           <div className="App-body">
@@ -25,21 +34,12 @@ function App() {
               <Redirect to="/home" />
             </Route>
             <Route exact path="/home" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/logout" component={Logout} />
             <Route exact path="/stats" component={Stats} />
-            <Route exact path="/playlists">
-              <Playlists />
-            </Route>
-            <Route
-              exact
-              path="/playlists/:playlistId"
-              component={PlaylistTracks}
-            />
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/logout">
-              <Logout />
-            </Route>
+            <Route exact path="/playlists" component={Playlists} />
+            {/* prettier-ignore */}
+            <Route exact path="/playlists/:playlistId" component={PlaylistTracks} />
           </div>
         </div>
       </Router>
