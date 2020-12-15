@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Card,
   CardActionArea,
@@ -44,18 +45,20 @@ const useStyles = makeStyles({
 function SongCard(props) {
   const classes = useStyles();
   return (
-    <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={props.id}>
-      <Card className={classes.card} variant="outlined">
-        <CardActionArea>
+    <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={uuidv4()}>
+      <Card className={classes.card} variant="outlined" key={uuidv4()}>
+        <CardActionArea key={uuidv4()}>
           <CardMedia
+            key={uuidv4()}
             className={classes.media}
             component="img"
             alt={props.name}
             image={props.url}
             title="show image"
           />
-          <CardContent className={classes.content}>
+          <CardContent key={uuidv4()} className={classes.content}>
             <Typography
+              key={uuidv4()}
               className={classes.titleHead}
               gutterBottom
               variant="h6"
@@ -63,14 +66,14 @@ function SongCard(props) {
             >
               {props.name}
             </Typography>
-            <p>
+            <div key={uuidv4()}>
               {" "}
               Artists:
               <br />
               {props.artists.map((x) => {
-                return <div>{x.name}</div>;
+                return <div key={uuidv4()}>{x.name}</div>;
               })}
-            </p>
+            </div>
           </CardContent>
         </CardActionArea>
       </Card>
