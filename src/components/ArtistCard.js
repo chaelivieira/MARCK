@@ -44,11 +44,15 @@ const useStyles = makeStyles({
 function ArtistCard(props) {
   const { currentUser } = useContext(AuthContext);
   const send_request = async () => {
-    await axios({
+    const id = await axios({
       method: "post",
       url: `http://localhost:9000/playlists/${currentUser.uid}/${props.id}`,
     });
     console.log("hit button");
+    console.log(id);
+    /*
+    <Redirect to={`/playlists/${id}`} />;
+    */
   };
   const classes = useStyles();
   return (

@@ -243,10 +243,8 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
     `artists-${req.params.time}`
   );
   if (artistsInfo) {
-    console.log("in redis artists");
     res.send(artistsInfo);
   } else {
-    console.log("not in redis artists");
     let accessToken = await redisClient.hgetAsync(
       `${req.params.id}`,
       "accesstoken"
@@ -266,11 +264,17 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
           `artists-${req.params.time}`,
           result
         );
+        var todayEnd = new Date().setHours(23, 59, 59, 999);
+        redisClient.expireat(
+          `artists-${req.params.time}`,
+          parseInt(todayEnd / 1000)
+        );
       } catch (e) {
         console.log(e);
+        res.send(500);
       }
     }
-    res.send(result);
+    res.send(result).status(200);
   }
 });
 
@@ -288,10 +292,8 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
     `tracks-${req.params.time}`
   );
   if (tracksInfo) {
-    console.log("in redis tracks");
     res.send(tracksInfo);
   } else {
-    console.log("not in redis tracks");
     let accessToken = await redisClient.hgetAsync(
       `${req.params.id}`,
       "accesstoken"
@@ -312,11 +314,17 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
           `tracks-${req.params.time}`,
           result
         );
+        var todayEnd = new Date().setHours(23, 59, 59, 999);
+        redisClient.expireat(
+          `artists-${req.params.time}`,
+          parseInt(todayEnd / 1000)
+        );
       } catch (e) {
         console.log(e);
+        res.send(500);
       }
     }
-    res.send(result);
+    res.send(result).status(200);
   }
 });
 app.get("/stats/:id", cors(), async (req, res) => {
@@ -347,11 +355,11 @@ app.get("/stats/:id", cors(), async (req, res) => {
     tracks: trackList,
   };
   result = JSON.stringify(info);
-  res.send(result);
+  res.send(result).status(200);
 });
 
-var rawParser = bodyParser.text({ type: "text/html" });
-app.post("/pdf", cors(), rawParser, async (req, res) => {
+var Parser = bodyParser.text({ type: "text/html" });
+app.post("/pdf", cors(), Parser, async (req, res) => {
   var htmlContent = req.body;
   try {
     wkhtmltopdf(htmlContent, {
@@ -360,11 +368,12 @@ app.post("/pdf", cors(), rawParser, async (req, res) => {
     });
   } catch (e) {
     console.log(e);
+    res.send(500);
   }
   res.send("okay").status(200);
 });
 app.get("/download", async (req, res) => {
-  res.download(path.join(__dirname, "/topStats.pdf"));
+  res.download(path.join(__dirname, "/topStats.pdf")).stats(200);
 });
 
 app.post("/imageUpload", upload.single("file"), async (req, res) => {
