@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
+import { v4 as uuidv4 } from "uuid";
+import Button from "react-bootstrap/Button";
+import { AuthContext } from "../firebase/Auth";
 import {
   Card,
   CardActionArea,
@@ -9,10 +12,11 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import "../App.css";
+const axios = require("axios");
 const useStyles = makeStyles({
   card: {
     maxWidth: 250,
-    height: 600,
+    height: "auto",
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: 5,
@@ -38,20 +42,34 @@ const useStyles = makeStyles({
 });
 
 function ArtistCard(props) {
+  const { currentUser } = useContext(AuthContext);
+  const send_request = async () => {
+    const id = await axios({
+      method: "post",
+      url: `http://localhost:9000/playlists/${currentUser.uid}/${props.id}`,
+    });
+    console.log("hit button");
+    console.log(id);
+    /*
+    <Redirect to={`/playlists/${id}`} />;
+    */
+  };
   const classes = useStyles();
   return (
-    <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={props.id}>
-      <Card className={classes.card} variant="outlined">
-        <CardActionArea>
+    <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={uuidv4()}>
+      <Card className={classes.card} variant="outlined" key={uuidv4()}>
+        <CardActionArea key={uuidv4()}>
           <CardMedia
+            key={uuidv4()}
             className={classes.media}
             component="img"
             alt={props.name}
             image={props.url}
             title="show image"
           />
-          <CardContent className={classes.content}>
+          <CardContent key={uuidv4()} className={classes.content}>
             <Typography
+              key={uuidv4()}
               className={classes.titleHead}
               gutterBottom
               variant="h6"
@@ -59,15 +77,25 @@ function ArtistCard(props) {
             >
               {props.name}
             </Typography>
-            <p> Number of Followers: {props.followers}</p>
-            <p>
+            <p key={uuidv4()}> Number of Followers: {props.followers}</p>
+            <div key={uuidv4()}>
               {" "}
               Genres:
               <br />
               {props.genres.map((x) => {
-                return <div>{x}</div>;
+                return <div key={uuidv4()}>{x}</div>;
               })}{" "}
-            </p>
+            </div>
+            <br></br>
+            <br></br>
+            <Button
+              key={uuidv4()}
+              variant="secondary  mr-1"
+              size="lg"
+              onClick={send_request}
+            >
+              Get Playlist
+            </Button>
           </CardContent>
         </CardActionArea>
       </Card>
