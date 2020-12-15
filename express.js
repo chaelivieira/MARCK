@@ -138,6 +138,7 @@ app.get("/spotify-callback", async (req, res) => {
     return;
   } else if (!req.query || !req.query.code) {
     res.status(400).send("Bad Login Attempt");
+    return;
   }
 
   try {
@@ -318,9 +319,8 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
   }
 });
 
-app.post("/imageUpload", upload.single("file"), async (req, res) => {
+app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, res) => {
   //Help from https://stackoverflow.com/questions/36477145/how-to-upload-image-file-and-display-using-express-nodejs
-  req.params.id = 'spotify:dragonguy128';
   let expDate = Date.parse(
     await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
   );
@@ -333,54 +333,68 @@ app.post("/imageUpload", upload.single("file"), async (req, res) => {
     "accesstoken"
   );
   if (accessToken) {
-    spotifyApi.setAccessToken(accessToken);
+    // spotifyApi.setAccessToken(accessToken);
     try {
-      var file = __dirname + "\\tmp\\" + req.file.originalname;
-      fs.rename(req.file.path, file, function (err) {
-        if (err) {
-          console.log(err);
-          res.send(500);
-        } else {
-          gm()
-            .command("convert")
-            .in(file)
-            .define("jpeg:extent=256kb")
-            .stream(function (err, stdout, stderr) {
-              if (err) {
-                console.log("ERROR: ", err);
-              } else {
-                let writeStream = fs.createWriteStream(
-                  __dirname + "\\tmp\\playlistImg.jpg"
-                );
-                writeStream.on("error", function (e) {
-                  console.log("ERR: ", e);
-                });
-                stdout.pipe(writeStream);
-                writeStream.on("finish", async function () {
-                  let send = Buffer.from(__dirname + "\\tmp\\playlistImg.jpg", 'binary').toString('base64');
-                  // console.log(send);
-                  spotifyApi.uploadCustomPlaylistCoverImage('3mmEWYnR0nFqQfKKIwEWZx', send)
-                    .then(function(data) {
-                      console.log('Playlsit cover image uploaded!');
-                    }, function(err) {
-                      console.log('Something went wrong!', err);
-                    }
-                  // let { data } = await axios.put(
-                  //   `https://api.spotify.com/v1/playlists/3mmEWYnR0nFqQfKKIwEWZx/images`,
-                  //   send,
-                  //   {
-                  //     headers: { 
-                  //       Authorization: `Bearer ${accessToken}`,
-                  //       "Content-Type": "image/jpeg"
-                  //     },
-                  //   }
+      if (req.file.originalname.slice(-4) !== ".png" &&  req.file.originalname.slice(-4) !== ".jpg" && req.file.originalname.slice(-5) !== ".jpeg"){
+        res.status(400).json({message: "Image must be a .png or .jpg or .jpeg"});
+        return;
+      } else {
+        var file = __dirname + "\\tmp\\" + req.file.originalname;
+        fs.rename(req.file.path, file, function (err) {
+          if (err) {
+            console.log(err);
+            res.send(500);
+          } else {
+            gm()
+              .command("convert")
+              .in(file)
+              .define("jpeg:extent=190kb")
+              .stream(function (err, stdout, stderr) {
+                if (err) {
+                  console.log("ERROR: ", err);
+                } else {
+                  let writeStream = fs.createWriteStream(
+                    __dirname + "\\tmp\\playlistImg.jpg"
                   );
-                  // console.log(data);
-                });
-              }
-            });
-        }
+                  writeStream.on("error", function (e) {
+                    console.log("ERR: ", e);
+                  });
+                  stdout.pipe(writeStream);
+                  writeStream.on("finish", async function () {
+                    let image = await fs.promises.readFile(__dirname + "\\tmp\\playlistImg.jpg");
+                    let send = Buffer.from(image).toString('base64');
+                    // console.log(send);
+                    // spotifyApi.uploadCustomPlaylistCoverImage(req.params.playlistId, send)
+                    //   .then(function(data) {
+                    //     console.log('Playlist cover image uploaded!');
+                    //     console.log(data);
+                    //   }, function(err) {
+                    //     console.log('Something went wrong!', err);
+                    //   })
+                    try {
+                      let { data } = await axios.put(
+                        `https://api.spotify.com/v1/playlists/${req.params.playlistId}/images`,
+                        send,
+                        {
+                          headers: { 
+                            Authorization: `Bearer ${accessToken}`,
+                            "Content-Type": "image/jpeg"
+                          },
+                        }
+                      );
+                      let result = {
+                        message: "Successfully updated playlist cover image!"
+                      };
+                      res.send(result);
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  });
+                }
+              });
+          }
       });
+      }
     } catch (e) {
       console.log(e);
     }
