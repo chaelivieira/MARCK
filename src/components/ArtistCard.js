@@ -46,7 +46,7 @@ function ArtistCard(props) {
   const [clicked, setclicked] = useState(false);
   const [id, setId] = useState("");
   const send_request = async () => {
-    const id = await axios({
+    await axios({
       method: "post",
       url: `http://localhost:9000/playlists/${currentUser.uid}/${props.id}`,
     }).then((response) => {

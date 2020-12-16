@@ -81,7 +81,6 @@ const PlaylistTracks = (props) => {
     );
    
     // Details of the uploaded file 
-    console.log(selectedFile); 
     setUploaded('uploading');
    
     // Request made to the backend api 
@@ -89,7 +88,6 @@ const PlaylistTracks = (props) => {
     try {
       let { data } = await axios.post(`http://localhost:9000/${currentUser.uid}/${props.match.params.playlistId}/playlistImage`, formData);
       setUploaded(data);
-      console.log(data);
       if (data.reload) {
         window.location.reload();
       }
@@ -99,7 +97,6 @@ const PlaylistTracks = (props) => {
   }; 
 
   useEffect(() => {
-    console.log("playlist tracks UseEffect fired");
     async function fetchData() {
       try {
         const { data } = await axios.get(

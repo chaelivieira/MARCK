@@ -57,7 +57,6 @@ const Playlists = (props) => {
         const { data } = await axios.get(
           `http://localhost:9000/playlists/${currentUser.uid}`
         );
-        console.log(data);
         setPlaylistData(data);
         setLoading(false);
       } catch (e) {

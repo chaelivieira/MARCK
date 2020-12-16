@@ -29,7 +29,6 @@ function Artists() {
     setTerm("long_term");
   };
   useEffect(() => {
-    console.log("render");
     async function fetchData() {
       try {
         const { data } = await axios.get(

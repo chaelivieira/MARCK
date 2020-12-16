@@ -32,7 +32,6 @@ function Stats() {
 
   async function sendData() {
     var htmlContent = document.getElementById("foo").outerHTML;
-    console.log(htmlContent);
     try {
       await axios({
         method: "post",

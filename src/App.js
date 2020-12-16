@@ -3,7 +3,6 @@ import { AuthProvider } from "./firebase/Auth";
 import {
   BrowserRouter as Router,
   Route,
-  Redirect,
   Link,
 } from "react-router-dom";
 import Home from "./components/Home";
@@ -22,7 +21,7 @@ function App() {
         <div className="App">
           <header className="App-header">
             <h1>
-              <Link to="/home" className="Header-link">
+              <Link to="/" className="Header-link">
                 Unwrapped
               </Link>
             </h1>
@@ -30,10 +29,7 @@ function App() {
           </header>
           <div className="App-body">
             <br />
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
-            <Route exact path="/home" component={Home} />
+            <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/logout" component={Logout} />
             <Route exact path="/stats" component={Stats} />

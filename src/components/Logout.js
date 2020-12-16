@@ -21,7 +21,7 @@ function Logout() {
       <div>
         <p>Are you sure you want to log out?</p>
         <button type="button" onClick={onSignout}>
-          <Link to="/home">Log out</Link>
+          <Link to="/">Log out</Link>
         </button>
       </div>
     );

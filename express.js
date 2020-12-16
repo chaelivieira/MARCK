@@ -58,7 +58,6 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL) {
   return Promise.all([userCreationTask]).then(async () => {
     // Create a Firebase custom auth token.
     const token = await admin.auth().createCustomToken(uid);
-    //console.log('Created Custom token for UID "', uid, '" Token:', token);
     return token;
   });
 }
@@ -185,12 +184,11 @@ app.get("/spotify-callback", async (req, res) => {
           await redisClient.hsetAsync(`${uid}`, "refreshToken", refreshToken);
           await redisClient.hsetAsync(`${uid}`, "expiresAt", expiresAt);
         } catch (e) {
-          console.log("WARNING");
           console.log(e);
           res.send(e);
           return;
         }
-        res.send(signInFirebaseTemplate(firebaseToken, accessToken));
+        res.status(200).send(signInFirebaseTemplate(firebaseToken, accessToken));
       });
   } catch (e) {
     console.log(e);
@@ -199,7 +197,6 @@ app.get("/spotify-callback", async (req, res) => {
 
 async function refreshSpotifyToken(sID) {
   let refreshToken = await redisClient.hgetAsync(`${sID}`, "refreshToken");
-  console.log("Pre-Re: ", refreshToken);
   let base64 = new Buffer.from(
     clientID + ":" + process.env.SPOTIFY_SECRET
   ).toString("base64");
@@ -230,7 +227,6 @@ async function refreshSpotifyToken(sID) {
 }
 
 app.get("/artists/:id/:time", cors(), async (req, res) => {
-  console.log(req.params.id);
   let expDate = Date.parse(
     await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
   );
@@ -243,7 +239,7 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
     `artists-${req.params.time}`
   );
   if (artistsInfo) {
-    res.send(artistsInfo);
+    res.status(200).send(artistsInfo);
   } else {
     let accessToken = await redisClient.hgetAsync(
       `${req.params.id}`,
@@ -271,10 +267,10 @@ app.get("/artists/:id/:time", cors(), async (req, res) => {
         );
       } catch (e) {
         console.log(e);
-        res.send(500);
+        res.status(500);
       }
     }
-    res.send(result).status(200);
+    res.status(200).send(result);
   }
 });
 
@@ -283,7 +279,6 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
     await redisClient.hgetAsync(`${req.params.id}`, "expiresAt")
   );
   let curDate = new Date();
-  console.log(await redisClient.hgetAsync(`${req.params.id}`, "expiresAt"));
   if (curDate > expDate) {
     refreshSpotifyToken(req.params.id);
   }
@@ -292,7 +287,7 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
     `tracks-${req.params.time}`
   );
   if (tracksInfo) {
-    res.send(tracksInfo);
+    res.status(200).send(tracksInfo);
   } else {
     let accessToken = await redisClient.hgetAsync(
       `${req.params.id}`,
@@ -321,10 +316,10 @@ app.get("/tracks/:id/:time", cors(), async (req, res) => {
         );
       } catch (e) {
         console.log(e);
-        res.send(500);
+        res.status(500);
       }
     }
-    res.send(result).status(200);
+    res.status(200).send(result);
   }
 });
 app.get("/stats/:id", cors(), async (req, res) => {
@@ -355,7 +350,7 @@ app.get("/stats/:id", cors(), async (req, res) => {
     tracks: trackList,
   };
   let result = JSON.stringify(info);
-  res.send(result).status(200);
+  res.status(200).send(result);
 });
 
 var Parser = bodyParser.text({ type: "text/html" });
@@ -366,11 +361,11 @@ app.post("/pdf", cors(), Parser, async (req, res) => {
       output: "topStats.pdf",
       pageSize: "letter",
     }, function (err, stream) {
-      res.send("okay").status(200);
+      res.status(200).send("okay");
     });
   } catch (e) {
     console.log(e);
-    res.send(500);
+    res.status(500);
   }
 });
 app.get("/download", async (req, res) => {
@@ -379,7 +374,7 @@ app.get("/download", async (req, res) => {
     "topStats.pdf",
     function (err) {
       if (err) {
-        console.log(err.message);
+        console.log(err);
       } else {
         console.log("it worked");
       }
@@ -401,7 +396,6 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
     "accesstoken"
   );
   if (accessToken) {
-    // spotifyApi.setAccessToken(accessToken);
     try {
       if (req.file.originalname.slice(-4) !== ".png" &&  req.file.originalname.slice(-4) !== ".jpg" && req.file.originalname.slice(-5) !== ".jpeg"){
         res.status(400).json({message: "Image must be a .png or .jpg or .jpeg"});
@@ -411,7 +405,7 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
         fs.rename(req.file.path, file, async function (err) {
           if (err) {
             console.log(err);
-            res.send(500);
+            res.status(500);
           } else {
             // gm()
             //   .command("convert")
@@ -435,7 +429,7 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
                     let image = await fs.promises.readFile(__dirname + "/tmp/playlistImg.jpg");
                     let send = Buffer.from(image).toString('base64');
                     try {
-                      let { data } = await axios.put(
+                      await axios.put(
                         `https://api.spotify.com/v1/playlists/${req.params.playlistId}/images`,
                         send,
                         {
@@ -449,7 +443,7 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
                         message: "Successfully updated playlist cover image!",
                         reload: true
                       };
-                      res.send(result);
+                      res.status(200).send(result);
                     } catch (e) {
                       console.log(e);
                       res.send({ message: "Could not update playlist cover image. Try a different image.", reload: false });
@@ -462,9 +456,11 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
     }
       } catch (e) {
         console.log(e);
+        res.status(500);
       }
     } else {
       console.log("no access token");
+      res.status(500);
     }
   }
 );
@@ -497,12 +493,14 @@ app.get("/playlists/:id", cors(), async (req, res) => {
       );
 
       result = JSON.stringify(data.items);
-      res.send(result);
+      res.status(200).send(result);
     } catch (e) {
       console.log(e);
+      res.status(500);
     }
   } else {
     console.log("no access token");
+    res.status(500);
   }
 });
 
@@ -519,7 +517,6 @@ app.post("/playlists/:id/:artistId", cors(), async (req, res) => {
     `${req.params.id}`,
     "accesstoken"
   );
-  var result = {};
   if (accessToken) {
     try {
       let uid = req.params.id;
@@ -534,9 +531,6 @@ app.post("/playlists/:id/:artistId", cors(), async (req, res) => {
       );
 
       let tracks = data.tracks;
-
-      //result = JSON.stringify(data);
-      //res.send(result);
       let artists = tracks[0].artists;
       let artistName = "";
 
@@ -562,7 +556,6 @@ app.post("/playlists/:id/:artistId", cors(), async (req, res) => {
       );
 
       let playlistData = playlist.data;
-      //let playlistData = JSON.stringify(playlist.data);
 
       let trackArr = [];
       for (let i = 0; i < tracks.length; i++) {
@@ -572,7 +565,7 @@ app.post("/playlists/:id/:artistId", cors(), async (req, res) => {
       let trackBody = {
         uris: trackArr,
       };
-      const addToPlaylist = await axios.post(
+      await axios.post(
         `https://api.spotify.com/v1/playlists/${playlistData.id}/tracks`,
         trackBody,
         {
@@ -583,15 +576,15 @@ app.post("/playlists/:id/:artistId", cors(), async (req, res) => {
         }
       );
 
-      res.send(playlistData.id);
+      res.status(200).send(playlistData.id);
 
-      //let addToPlayData = JSON.stringify(addToPlaylist.data);
-      //res.send(addToPlayData);
     } catch (e) {
       console.log(e);
+      res.status(500);
     }
   } else {
     console.log("no access token");
+    res.status(500);
   }
 });
 
@@ -619,12 +612,14 @@ app.get("/playlists/:id/:playlistId", cors(), async (req, res) => {
       );
 
       result = JSON.stringify(data);
-      res.send(result);
+      res.status(200).send(result);
     } catch (e) {
       console.log(e);
+      res.status(500);
     }
   } else {
     console.log("no access token");
+    res.status(500);
   }
 });
 
