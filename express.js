@@ -340,22 +340,22 @@ app.get("/stats/:id", cors(), async (req, res) => {
   var t = JSON.parse(tracksInfo);
   var a = JSON.parse(artistsInfo);
   var trackList = [];
-  {
-    t.map((item) => {
-      trackList.push(item.name);
-    });
-  }
+
+  t.map((item) => {
+    trackList.push(item.name);
+  });
+
   var artistList = [];
-  {
-    a.map((item) => {
-      artistList.push(item.name);
-    });
-  }
+
+  a.map((item) => {
+    artistList.push(item.name);
+  });
+
   const info = {
     artists: artistList,
     tracks: trackList,
   };
-  result = JSON.stringify(info);
+  var result = JSON.stringify(info);
   res.send(result).status(200);
 });
 
@@ -374,7 +374,20 @@ app.post("/pdf", cors(), Parser, async (req, res) => {
   res.send("okay").status(200);
 });
 app.get("/download", async (req, res) => {
-  res.download(path.join(__dirname, "/topStats.pdf")).stats(200);
+  /*
+  res.download(
+    path.join(__dirname, "/topStats.pdf"),
+    "topStats.pdf",
+    function (err) {
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log("it worked");
+      }
+    }
+  );
+  */
+  res.sendFile(path.join(__dirname, "/topStats.pdf"));
 });
 
 app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, res) => {
