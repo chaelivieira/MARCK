@@ -373,7 +373,6 @@ app.post("/pdf", cors(), Parser, async (req, res) => {
   res.send("okay").status(200);
 });
 app.get("/download", async (req, res) => {
-  /*
   res.download(
     path.join(__dirname, "/topStats.pdf"),
     "topStats.pdf",
@@ -385,8 +384,6 @@ app.get("/download", async (req, res) => {
       }
     }
   );
-  */
-  res.sendFile(path.join(__dirname, "/topStats.pdf"));
 });
 
 app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, res) => {
@@ -462,13 +459,11 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
           }
       });
       }
-    } catch (e) {
-      console.log(e);
+    } else {
+      console.log("no access token");
     }
-  } else {
-    console.log("no access token");
   }
-});
+);
 
 // Get all the playlists of the current user
 app.get("/playlists/:id", cors(), async (req, res) => {
@@ -564,7 +559,6 @@ app.post("/playlists/:id/:artistId", cors(), async (req, res) => {
 
       let playlistData = playlist.data;
       //let playlistData = JSON.stringify(playlist.data);
-      
 
       let trackArr = [];
       for (let i = 0; i < tracks.length; i++) {

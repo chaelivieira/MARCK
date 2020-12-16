@@ -2,7 +2,6 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   Grid,
@@ -47,35 +46,33 @@ function SongCard(props) {
   return (
     <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={uuidv4()}>
       <Card className={classes.card} variant="outlined" key={uuidv4()}>
-        <CardActionArea key={uuidv4()}>
-          <CardMedia
+        <CardMedia
+          key={uuidv4()}
+          className={classes.media}
+          component="img"
+          alt={props.name}
+          image={props.url}
+          title="show image"
+        />
+        <CardContent key={uuidv4()} className={classes.content}>
+          <Typography
             key={uuidv4()}
-            className={classes.media}
-            component="img"
-            alt={props.name}
-            image={props.url}
-            title="show image"
-          />
-          <CardContent key={uuidv4()} className={classes.content}>
-            <Typography
-              key={uuidv4()}
-              className={classes.titleHead}
-              gutterBottom
-              variant="h6"
-              component="h3"
-            >
-              {props.name}
-            </Typography>
-            <div key={uuidv4()}>
-              {" "}
-              Artists:
-              <br />
-              {props.artists.map((x) => {
-                return <div key={uuidv4()}>{x.name}</div>;
-              })}
-            </div>
-          </CardContent>
-        </CardActionArea>
+            className={classes.titleHead}
+            gutterBottom
+            variant="h6"
+            component="h3"
+          >
+            {props.name}
+          </Typography>
+          <div key={uuidv4()}>
+            {" "}
+            Artists:
+            <br />
+            {props.artists.map((x) => {
+              return <div key={uuidv4()}>{x.name}</div>;
+            })}
+          </div>
+        </CardContent>
       </Card>
     </Grid>
   );
