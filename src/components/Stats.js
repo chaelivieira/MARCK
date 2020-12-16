@@ -72,6 +72,7 @@ function Stats() {
             Download Stats From All Time PDF
           </Button>
           <br></br>
+          <p>Disclaimer: If your Top Artists or Top Songs are empty, nothing will show in that field on the PDF</p>
           <br></br>
           <div id="foo"></div>
           <h1>Top Songs:</h1>

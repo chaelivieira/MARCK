@@ -56,7 +56,6 @@ const PlaylistTracks = (props) => {
   const [loading, setLoading] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploaded, setUploaded] = useState(null);
-  const [clicked, setClicked] = useState(false);
   // eslint-disable-next-line
   const classes = useStyles();
 
@@ -91,6 +90,9 @@ const PlaylistTracks = (props) => {
       let { data } = await axios.post(`http://localhost:9000/${currentUser.uid}/${props.match.params.playlistId}/playlistImage`, formData);
       setUploaded(data);
       console.log(data);
+      if (data.reload) {
+        window.location.reload();
+      }
     } catch (e) {
       console.log(e);
     }
@@ -170,7 +172,7 @@ const PlaylistTracks = (props) => {
             title={`spotify player for playlist ${playlistData.name}`}
             width="100%"
             height="800"
-            frameborder="4"
+            frameBorder="4"
             allowtransparency="true"
             allow="encrypted-media"
           ></iframe>
