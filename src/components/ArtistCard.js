@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Button from "react-bootstrap/Button";
 import { AuthContext } from "../firebase/Auth";
+import { Redirect } from "react-router-dom";
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   Grid,
@@ -43,22 +43,24 @@ const useStyles = makeStyles({
 
 function ArtistCard(props) {
   const { currentUser } = useContext(AuthContext);
+  const [clicked, setclicked] = useState(false);
+  const [id, setId] = useState("");
   const send_request = async () => {
     const id = await axios({
       method: "post",
       url: `http://localhost:9000/playlists/${currentUser.uid}/${props.id}`,
+    }).then((response) => {
+      setId(response.data);
+      setclicked(true);
     });
-    console.log("hit button");
-    console.log(id);
-    /*
-    <Redirect to={`/playlists/${id}`} />;
-    */
   };
   const classes = useStyles();
-  return (
-    <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={uuidv4()}>
-      <Card className={classes.card} variant="outlined" key={uuidv4()}>
-        <CardActionArea key={uuidv4()}>
+  if (clicked) {
+    return <Redirect to={`/playlists/${id}`} />;
+  } else {
+    return (
+      <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={uuidv4()}>
+        <Card className={classes.card} variant="outlined" key={uuidv4()}>
           <CardMedia
             key={uuidv4()}
             className={classes.media}
@@ -97,10 +99,10 @@ function ArtistCard(props) {
               Get Playlist
             </Button>
           </CardContent>
-        </CardActionArea>
-      </Card>
-    </Grid>
-  );
+        </Card>
+      </Grid>
+    );
+  }
 }
 
 export default ArtistCard;

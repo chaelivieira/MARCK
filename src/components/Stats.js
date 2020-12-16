@@ -40,15 +40,7 @@ function Stats() {
         headers: { "Content-Type": "text/html" },
         data: htmlContent,
       });
-      await axios
-        .get(`http://localhost:9000/download`)
-        .then((response) => {
-          console.log(response.headers);
-          console.log("File downloading successfully!");
-        })
-        .catch((error) => {
-          console.error("File could not be downloaded:", error);
-        });
+      window.open("http://localhost:9000/download");
       const removeElements = (elms) => elms.forEach((el) => el.remove());
       removeElements(document.querySelectorAll(".remove"));
     } catch (e) {
