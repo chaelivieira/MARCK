@@ -24,6 +24,7 @@
 .eslintcache
 dump.rdb
 package-lock.json
+topStats.pdf
 
 npm-debug.log*
 yarn-debug.log*
