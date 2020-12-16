@@ -8,8 +8,8 @@ Ensure that you have redis installed on your system before running the server. S
 ## ImageMagick
 This project also uses ImageMagick with the server. The server is set up to work with as many versions as possible, so if installing version 7+, make sure that the legacy commands are also installed so that `convert` is recoginzed.
 
-
-
+## Wkhtmltopdf
+You must also have wkhtmltopdf installed in order to run the server. You can download the software for your operating system at https://wkhtmltopdf.org/downloads.html
 
 # Running the project
 
