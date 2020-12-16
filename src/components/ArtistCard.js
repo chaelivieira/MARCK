@@ -96,7 +96,7 @@ function ArtistCard(props) {
               size="lg"
               onClick={send_request}
             >
-              Get Playlist
+              Create Playlist
             </Button>
           </CardContent>
         </Card>

@@ -82,7 +82,6 @@ function Stats() {
           <Artists />
         </div>
       )}
-      ;
     </div>
   );
 }

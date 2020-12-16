@@ -365,12 +365,13 @@ app.post("/pdf", cors(), Parser, async (req, res) => {
     wkhtmltopdf(htmlContent, {
       output: "topStats.pdf",
       pageSize: "letter",
+    }, function (err, stream) {
+      res.send("okay").status(200);
     });
   } catch (e) {
     console.log(e);
     res.send(500);
   }
-  res.send("okay").status(200);
 });
 app.get("/download", async (req, res) => {
   res.download(
@@ -458,6 +459,9 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
               // });
           }
       });
+    }
+      } catch (e) {
+        console.log(e);
       }
     } else {
       console.log("no access token");
