@@ -126,20 +126,20 @@ const PlaylistTracks = (props) => {
         <Redirect to="/login" />
       </div>
     );
-  } else if (playlistData && playlistData.errorMessage ) {
+  } else if (playlistData && playlistData.errorMessage) {
     return (
       <div>
         <h2>{playlistData.errorMessage}</h2>
-        <Link to='/playlists'>Back to Playlists</Link>
+        <Link to="/playlists">Back to Playlists</Link>
       </div>
     );
-  } else if (loading ) {
+  } else if (loading) {
     return (
       <div>
         <h2>Loading...</h2>
       </div>
     );
-  } else  {
+  } else {
     return (
       <div>
         <div className={classes.playlistHeader}>
@@ -187,7 +187,7 @@ const PlaylistTracks = (props) => {
             src={`https://open.spotify.com/embed/playlist/${playlistData.id}`}
             title={`spotify player for playlist ${playlistData.name}`}
             width="100%"
-            height="800"
+            height="600"
             frameBorder="4"
             allowtransparency="true"
             allow="encrypted-media"

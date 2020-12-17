@@ -17,28 +17,34 @@ import {
 const useStyles = makeStyles({
   card: {
     maxWidth: 250,
+
     height: "auto",
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: 5,
-    border: "1px solid #1e8678",
+    border: "1px solid #0B86F4",
     boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
+    "&:hover": {
+      border: "1px solid #f40b86",
+    },
   },
   content: {
     height: 90,
   },
   titleHead: {
-    borderBottom: "1px solid #1e8678",
+    color: "#0B86F4",
+    borderBottom: "1px solid #0B86F4",
     fontWeight: "bold",
     minHeight: 34,
   },
   grid: {
     flexGrow: 1,
     flexDirection: "row",
+    padding: 50,
   },
   media: {
-    height: "250px",
-    width: "250px",
+    height: 250,
+    width: 250,
   },
   button: {
     color: "#1e8678",
