@@ -13,6 +13,6 @@ You must also have wkhtmltopdf installed in order to run the server. You can dow
 
 # Running the project
 
-First, you will want to build the production version of the react app by running `npm build`. This may take a short time. After this, the pages will be delivered by an express server, which you can start by running `npm run exp`. 
+First, you will want to build the production version of the react app by running `npm run build`. This may take a short time. After this, the pages will be delivered by an express server, which you can start by running `npm run exp`. 
 
 Once the express server is live, start the react static server with `serve -s build`. The website can be found at `localhost:5000/`!
