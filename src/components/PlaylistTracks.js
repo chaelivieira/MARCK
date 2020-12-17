@@ -166,7 +166,7 @@ const PlaylistTracks = (props) => {
             </h4>
             <div className={classes.descriptionContainer}>
               <div className={classes.uploadContainer}>
-                <label for="new-playlist-image">New Playlist Image</label>
+                <label htmlFor="new-playlist-image">New Playlist Image</label>
                 <input
                   type="file"
                   accept=".jpg, .jpeg, .png"

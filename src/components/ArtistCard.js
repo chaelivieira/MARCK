@@ -28,6 +28,10 @@ const useStyles = makeStyles({
     maxWidth: 250,
     height: 320,
   },
+  genre: {
+    marginTop: 0,
+    marginBottom: 0,
+  },
   titleHead: {
     borderBottom: "1px solid #0B86F4",
     fontWeight: "bold",
@@ -110,13 +114,17 @@ function ArtistCard(props) {
               Followers:{" "}
               {props.followers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             </p>
-            <p key={uuidv4()}>
+            <div key={uuidv4()}>
               Genres:
               <br />
               {props.genres.slice(0, 5).map((x) => {
-                return <div key={uuidv4()}>{x}</div>;
+                return (
+                  <p className={classes.genre} key={uuidv4()}>
+                    {x}
+                  </p>
+                );
               })}
-            </p>
+            </div>
           </CardContent>
         </Card>
       </Grid>
