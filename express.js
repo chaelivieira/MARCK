@@ -90,7 +90,7 @@ const client = new AuthorizationCode(credentials);
 //Make cookies visible
 app.use(cookieParser());
 //Parse for Image uploads
-let upload = multer({ dest: "/tmp/" });
+let upload = multer({ dest: `${__dirname}/tmp/` });
 //CORS Every Route
 app.use(cors());
 
@@ -405,6 +405,7 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
         fs.rename(req.file.path, file, async function (err) {
           if (err) {
             console.log(err);
+            fs.unlinkSync(req.file.path);
             res.status(500);
           } else {
             // gm()
@@ -415,9 +416,9 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
             //     if (err) {
             //       console.log("ERROR: ", err);
             //     } else {
-                file = file.replace(/(\s+)/g, '\\$1');
+                file = __dirname.replace(/(\s+)/g, '\\$1') + "/tmp/" + req.file.originalname;
                 let output = `${__dirname}/tmp/playlistImg.jpg`.replace(/(\s+)/g, '\\$1');
-                await exec(`convert ${file} -define jpeg:extent=190kb ${output}`);
+                await exec(`convert "${file}" -define jpeg:extent=190kb ${output}`);
                   // let writeStream = fs.createWriteStream(
                   //  `${__dirname}/tmp/playlistImg.jpg`
                   // );
@@ -444,9 +445,13 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
                         reload: true
                       };
                       res.status(200).send(result);
+                      fs.unlinkSync(file);
+                      fs.unlinkSync(output);
                     } catch (e) {
-                      console.log(e);
+                      console.log(e);  
                       res.send({ message: "Could not update playlist cover image. Try a different image.", reload: false });
+                      fs.unlinkSync(file);
+                      fs.unlinkSync(output);
                     }
                   // });
                 // }
