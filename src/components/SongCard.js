@@ -58,27 +58,19 @@ function SongCard(props) {
             title="show image"
           />
           <CardContent key={uuidv4()} className={classes.content}>
-            {props.name.length >= 16 ? (
-              <Typography
-                key={uuidv4()}
-                className={classes.titleHead}
-                gutterBottom
-                variant="h6"
-                component="h3"
-              >
+            <Typography
+              key={uuidv4()}
+              className={classes.titleHead}
+              gutterBottom
+              variant="h6"
+              component="h3"
+            >
+              {props.name.length >= 15 ? (
                 <Textfit mode="single">{props.name}</Textfit>
-              </Typography>
-            ) : (
-              <Typography
-                key={uuidv4()}
-                className={classes.titleHead}
-                gutterBottom
-                variant="h6"
-                component="h3"
-              >
-                {props.name}
-              </Typography>
-            )}
+              ) : (
+                props.name
+              )}
+            </Typography>
 
             <div key={uuidv4()}>
               by
