@@ -40,7 +40,13 @@ const useStyles = makeStyles({
     backgroundColor: "#e6007d",
     border: "none",
     "&:hover": {
-      backgroundColor: "#c3096b",
+      backgroundColor: "#b80064",
+    },
+    "&:active": {
+      backgroundColor: "#b80064",
+    },
+    "&:focus": {
+      backgroundColor: "#b80064",
     },
   },
   playlistHeader: {
