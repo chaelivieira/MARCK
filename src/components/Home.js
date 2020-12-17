@@ -60,8 +60,8 @@ function Home() {
               Create a playlist based on one of your top artists that is save
               directly to your spotify page!
             </li>
-            <li>View all public playlists that you already have saved!</li>
-            <li>Listen to your public playlists!</li>
+            <li>View your top 50 playlists that you already have saved!</li>
+            <li>Listen to your public and private playlists!</li>
             <li>Save a PDF of your top 20 artists and tracks of all time!</li>
           </ul>
         </div>
