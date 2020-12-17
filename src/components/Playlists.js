@@ -51,11 +51,6 @@ const useStyles = makeStyles({
     height: 250,
     width: 250,
   },
-  button: {
-    color: "#1e8678",
-    fontWeight: "bold",
-    fontSize: 12,
-  },
 });
 
 const Playlists = (props) => {
