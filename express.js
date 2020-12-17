@@ -416,9 +416,10 @@ app.post("/:id/:playlistId/playlistImage", upload.single("file"), async (req, re
             //     if (err) {
             //       console.log("ERROR: ", err);
             //     } else {
-                file = __dirname.replace(/(\s+)/g, '\\$1') + "/tmp/" + req.file.originalname;
-                let output = `${__dirname}/tmp/playlistImg.jpg`.replace(/(\s+)/g, '\\$1');
-                await exec(`convert "${file}" -define jpeg:extent=190kb ${output}`);
+                // file = __dirname.replace(/(\s+)/g, '\\$1') + "/tmp/" + req.file.originalname;
+                // let output = `${__dirname}/tmp/playlistImg.jpg`.replace(/(\s+)/g, '\\$1');
+                let output = `${__dirname}/tmp/playlistImg.jpg`;
+                await exec(`convert "${file}" -define jpeg:extent=190kb "${output}"`);
                   // let writeStream = fs.createWriteStream(
                   //  `${__dirname}/tmp/playlistImg.jpg`
                   // );
