@@ -615,7 +615,7 @@ app.get("/playlists/:id/:playlistId", cors(), async (req, res) => {
       res.status(200).send(result);
     } catch (e) {
       console.log(e);
-      res.send({errorMessage:'Invalid playlist'});
+      res.status(404).send({errorMessage:'Playlist not found'});
     }
   } else {
     console.log("no access token");
