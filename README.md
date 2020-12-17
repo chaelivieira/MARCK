@@ -10,6 +10,7 @@ This project also uses ImageMagick with the server. The server is set up to work
 
 ## Wkhtmltopdf
 You must also have wkhtmltopdf installed in order to run the server. You can download the software for your operating system at https://wkhtmltopdf.org/downloads.html
+*** You may have to add your wkhtmltopdf to your PATH variables
 
 # Running the project
 
