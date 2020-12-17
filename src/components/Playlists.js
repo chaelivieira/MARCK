@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import noImage from "../img/download.jpeg";
+import { Textfit } from "react-textfit";
 import { Link, Redirect } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
 import "../App.css";
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   Grid,
@@ -24,17 +24,21 @@ const useStyles = makeStyles({
     border: "1px solid #1e8678",
     boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
   },
+  content: {
+    height: 90,
+  },
   titleHead: {
     borderBottom: "1px solid #1e8678",
     fontWeight: "bold",
+    minHeight: 34,
   },
   grid: {
     flexGrow: 1,
     flexDirection: "row",
   },
   media: {
-    height: "100%",
-    width: "100%",
+    height: "250px",
+    width: "250px",
   },
   button: {
     color: "#1e8678",
@@ -83,32 +87,33 @@ const Playlists = (props) => {
       return (
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={playlist.id}>
           <Card className={classes.card} variant="outlined">
-            <CardActionArea>
-              <Link to={`/playlists/${playlist.id}`}>
-                <CardMedia
-                  className={classes.media}
-                  component="img"
-                  image={
-                    playlist && playlist.images[0]
-                      ? playlist.images[0].url
-                      : noImage
-                  }
-                  title="show image"
-                />
-
-                <CardContent>
-                  <Typography
-                    className={classes.titleHead}
-                    gutterBottom
-                    variant="h6"
-                    component="h3"
-                  >
-                    {playlist.name}
-                  </Typography>
-                  <p>Tracks: {playlist.tracks.total}</p>
-                </CardContent>
-              </Link>
-            </CardActionArea>
+            <Link to={`/playlists/${playlist.id}`}>
+              <CardMedia
+                className={classes.media}
+                component="img"
+                image={
+                  playlist && playlist.images[0]
+                    ? playlist.images[0].url
+                    : noImage
+                }
+                title="show image"
+              />
+            </Link>
+            <CardContent className={classes.content}>
+              <Typography
+                className={classes.titleHead}
+                gutterBottom
+                variant="h6"
+                component="h3"
+              >
+                {playlist.name.length >= 19 ? (
+                  <Textfit mode="single">{playlist.name}</Textfit>
+                ) : (
+                  playlist.name
+                )}
+              </Typography>
+              <p>{playlist.tracks.total} songs</p>
+            </CardContent>
           </Card>
         </Grid>
       );

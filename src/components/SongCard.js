@@ -13,6 +13,7 @@ import "../App.css";
 const useStyles = makeStyles({
   card: {
     maxWidth: 250,
+    width: 200,
     height: "auto",
     marginLeft: "auto",
     marginRight: "auto",
