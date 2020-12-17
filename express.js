@@ -546,7 +546,7 @@ app.post("/playlists/:id/:artistId", cors(), async (req, res) => {
       }
 
       const playlist = await axios.post(
-        `https://api.spotify.com/v1/users/${uid}/playlists`,
+        `https://api.spotify.com/v1/users/${uid}/playlists?limit=50`,
         {
           name: "Top Tracks from " + artistName,
           public: false,
