@@ -13,7 +13,7 @@ const useStyles = makeStyles({
     fontSize: 36,
   },
   h2: { fontSize: 24 },
-  h3: { fontSize: 18 },
+  h3: { fontSize: 18, textDecoration: "underline solid" },
   container: {
     display: "flex",
     flexDirection: "row",
