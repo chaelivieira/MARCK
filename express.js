@@ -501,7 +501,7 @@ app.get("/playlists/:id", cors(), async (req, res) => {
         uid = uid.substring(uid.indexOf(":") + 1, uid.length);
       }
       const { data } = await axios.get(
-        `https://api.spotify.com/v1/users/${uid}/playlists`,
+        `https://api.spotify.com/v1/users/${uid}/playlists?limit=48`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

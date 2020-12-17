@@ -27,6 +27,7 @@ const useStyles = makeStyles({
   },
   pdfButton: {
     width: "auto",
+    fontSize: 28,
     backgroundColor: "#F40B86",
     border: "none",
     alignSelf: "center",

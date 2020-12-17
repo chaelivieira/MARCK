@@ -46,7 +46,9 @@ const useStyles = makeStyles({
     width: "100%",
   },
   button: {
-    fontSize: 16,
+    width: "90%",
+    fontSize: 24,
+    fontWeight: "bold",
     backgroundColor: "#f40b86",
     border: "none",
     marginTop: 5,
@@ -91,7 +93,7 @@ function ArtistCard(props) {
               className={classes.titleHead}
               gutterBottom
               variant="h6"
-              component="h3"
+              component="h2"
             >
               {props.name.length >= 45 ? (
                 props.name.substring(0, 19) + "..."

@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     height: 90,
   },
   titleHead: {
-    color: "#0B86F4",
+    color: "#0077da",
     borderBottom: "1px solid #0B86F4",
     fontWeight: "bold",
     minHeight: 34,
@@ -110,7 +110,7 @@ const Playlists = (props) => {
                 className={classes.titleHead}
                 gutterBottom
                 variant="h6"
-                component="h3"
+                component="h2"
               >
                 {playlist.name.length >= 45 ? (
                   playlist.name.substring(0, 19) + "..."

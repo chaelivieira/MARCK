@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     width: "100%",
   },
   button: {
-    fontSize: 16,
+    fontSize: 24,
     backgroundColor: "#0B86F4",
     border: "none",
     "&:hover": {
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     },
   },
   activeButton: {
-    fontSize: 16,
+    fontSize: 24,
     backgroundColor: "#f40b86",
     border: "none",
     "&:hover": {
