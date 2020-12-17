@@ -11,7 +11,7 @@ const axios = require("axios");
 
 const useStyles = makeStyles({
   h1: {
-    fontSize: 24,
+    fontSize: 36,
     marginBottom: 20,
   },
   h2: {

@@ -16,7 +16,7 @@ import {
 
 const useStyles = makeStyles({
   title: {
-    fontSize: 24,
+    fontSize: 36,
     marginBottom: 20,
   },
   card: {
