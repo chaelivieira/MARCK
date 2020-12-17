@@ -1,8 +1,8 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import { Textfit } from "react-textfit";
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   Grid,
@@ -13,7 +13,7 @@ import "../App.css";
 const useStyles = makeStyles({
   card: {
     maxWidth: 250,
-    height: 500,
+    height: "auto",
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: 5,
@@ -22,11 +22,12 @@ const useStyles = makeStyles({
   },
   content: {
     maxWidth: 250,
-    height: 600,
+    height: 200,
   },
   titleHead: {
     borderBottom: "1px solid #1e8678",
     fontWeight: "bold",
+    minHeight: 34,
   },
   grid: {
     flexGrow: 1,
@@ -47,7 +48,7 @@ function SongCard(props) {
   return (
     <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={uuidv4()}>
       <Card className={classes.card} variant="outlined" key={uuidv4()}>
-        <CardActionArea key={uuidv4()}>
+        <div key={uuidv4()}>
           <CardMedia
             key={uuidv4()}
             className={classes.media}
@@ -57,25 +58,37 @@ function SongCard(props) {
             title="show image"
           />
           <CardContent key={uuidv4()} className={classes.content}>
-            <Typography
-              key={uuidv4()}
-              className={classes.titleHead}
-              gutterBottom
-              variant="h6"
-              component="h3"
-            >
-              {props.name}
-            </Typography>
+            {props.name.length >= 16 ? (
+              <Typography
+                key={uuidv4()}
+                className={classes.titleHead}
+                gutterBottom
+                variant="h6"
+                component="h3"
+              >
+                <Textfit mode="single">{props.name}</Textfit>
+              </Typography>
+            ) : (
+              <Typography
+                key={uuidv4()}
+                className={classes.titleHead}
+                gutterBottom
+                variant="h6"
+                component="h3"
+              >
+                {props.name}
+              </Typography>
+            )}
+
             <div key={uuidv4()}>
-              {" "}
-              Artists:
+              by
               <br />
               {props.artists.map((x) => {
                 return <div key={uuidv4()}>{x.name}</div>;
               })}
             </div>
           </CardContent>
-        </CardActionArea>
+        </div>
       </Card>
     </Grid>
   );

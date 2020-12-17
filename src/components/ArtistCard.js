@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Button from "react-bootstrap/Button";
+import { Textfit } from "react-textfit";
 import { AuthContext } from "../firebase/Auth";
 import { Redirect } from "react-router-dom";
 import {
@@ -25,11 +26,12 @@ const useStyles = makeStyles({
   },
   content: {
     maxWidth: 250,
-    height: 600,
+    height: 320,
   },
   titleHead: {
     borderBottom: "1px solid #1e8678",
     fontWeight: "bold",
+    minHeight: 34,
   },
   grid: {
     flexGrow: 1,
@@ -70,34 +72,43 @@ function ArtistCard(props) {
             title="show image"
           />
           <CardContent key={uuidv4()} className={classes.content}>
-            <Typography
-              key={uuidv4()}
-              className={classes.titleHead}
-              gutterBottom
-              variant="h6"
-              component="h3"
-            >
-              {props.name}
-            </Typography>
-            <p key={uuidv4()}> Number of Followers: {props.followers}</p>
-            <div key={uuidv4()}>
-              {" "}
-              Genres:
-              <br />
-              {props.genres.map((x) => {
-                return <div key={uuidv4()}>{x}</div>;
-              })}{" "}
-            </div>
-            <br></br>
-            <br></br>
+            {props.name.length >= 15 ? (
+              <Typography
+                key={uuidv4()}
+                className={classes.titleHead}
+                gutterBottom
+                variant="h6"
+                component="h3"
+              >
+                <Textfit mode="single">{props.name}</Textfit>
+              </Typography>
+            ) : (
+              <Typography
+                key={uuidv4()}
+                className={classes.titleHead}
+                gutterBottom
+                variant="h6"
+                component="h3"
+              >
+                {props.name}
+              </Typography>
+            )}
             <Button
               key={uuidv4()}
               variant="secondary  mr-1"
-              size="lg"
+              size="md"
               onClick={send_request}
             >
-              Create Playlist
+              Get Top Songs
             </Button>
+            <p key={uuidv4()}> Followers: {props.followers}</p>
+            <div key={uuidv4()}>
+              Genres:
+              <br />
+              {props.genres.slice(0, 5).map((x) => {
+                return <div key={uuidv4()}>{x}</div>;
+              })}
+            </div>
           </CardContent>
         </Card>
       </Grid>
