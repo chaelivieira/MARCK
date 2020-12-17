@@ -2,11 +2,10 @@ import React, { useState, useContext, useEffect } from "react";
 import noImage from "../img/download.jpeg";
 import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import "../App.css";
-const FormData = require('form-data');
-
+const FormData = require("form-data");
 
 const useStyles = makeStyles({
   card: {
@@ -59,34 +58,35 @@ const PlaylistTracks = (props) => {
   // eslint-disable-next-line
   const classes = useStyles();
 
-  const onFileChange = event => { 
-     
-    // Update the state 
-    setSelectedFile(event.target.files[0]); 
-   
-  }; 
+  const onFileChange = (event) => {
+    // Update the state
+    setSelectedFile(event.target.files[0]);
+  };
 
-  const onFileUpload = async () => { 
-    if (selectedFile.name.slice(-4) !== ".png" && selectedFile.name.slice(-4) !== ".jpg" && selectedFile.name.slice(-5) !== ".jpeg") {
+  const onFileUpload = async () => {
+    if (
+      selectedFile.name.slice(-4) !== ".png" &&
+      selectedFile.name.slice(-4) !== ".jpg" &&
+      selectedFile.name.slice(-5) !== ".jpeg"
+    ) {
       alert("Image must be a png, jpg, or jpeg");
       return;
     }
 
     const formData = new FormData();
-    // Update the formData object 
-    formData.append( 
-      "file",
-      selectedFile,
-      selectedFile.name
-    );
-   
-    // Details of the uploaded file 
-    setUploaded('uploading');
-   
-    // Request made to the backend api 
-    // Send formData object 
+    // Update the formData object
+    formData.append("file", selectedFile, selectedFile.name);
+
+    // Details of the uploaded file
+    setUploaded("uploading");
+
+    // Request made to the backend api
+    // Send formData object
     try {
-      let { data } = await axios.post(`http://localhost:9000/${currentUser.uid}/${props.match.params.playlistId}/playlistImage`, formData);
+      let { data } = await axios.post(
+        `http://localhost:9000/${currentUser.uid}/${props.match.params.playlistId}/playlistImage`,
+        formData
+      );
       setUploaded(data);
       if (data.reload) {
         window.location.reload();
@@ -94,7 +94,7 @@ const PlaylistTracks = (props) => {
     } catch (e) {
       console.log(e);
     }
-  }; 
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -116,8 +116,8 @@ const PlaylistTracks = (props) => {
   let message = "";
   if (uploaded && uploaded.message) {
     message = uploaded.message;
-  } else if (uploaded && uploaded==='uploading') {
-    message = 'Updating image...';
+  } else if (uploaded && uploaded === "uploading") {
+    message = "Updating image...";
   }
 
   if (!currentUser) {
@@ -126,40 +126,59 @@ const PlaylistTracks = (props) => {
         <Redirect to="/login" />
       </div>
     );
-  } else if (loading) {
+  } else if (playlistData && playlistData.errorMessage ) {
+    return (
+      <div>
+        <h2>{playlistData.errorMessage}</h2>
+        <Link to='/playlists'>Back to Playlists</Link>
+      </div>
+    );
+  } else if (loading ) {
     return (
       <div>
         <h2>Loading...</h2>
       </div>
     );
-  } else {
+  } else  {
     return (
       <div>
         <div className={classes.playlistHeader}>
           <div className="Playlist-tracks-info">
             <h1>{playlistData.name}</h1>
             <h2>{playlistData.description}</h2>
-            <p>A playlist by {playlistData.owner.id}</p>
+            <p>
+              A playlist by {playlistData.owner ? playlistData.owner.id : ""}
+            </p>
             <div>
-              <input type="file" accept=".jpg, .jpeg, .png" onChange={onFileChange} />
-              <button onClick = {() => {
-                if (!selectedFile){
-                  alert("Please upload an image first!");
-                  return;
-                } else {
-                  onFileUpload();
-                }
-              }}>
+              <input
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                onChange={onFileChange}
+              />
+              <button
+                onClick={() => {
+                  if (!selectedFile) {
+                    alert("Please upload an image first!");
+                    return;
+                  } else {
+                    onFileUpload();
+                  }
+                }}
+              >
                 Update Playlist Image
               </button>
             </div>
-            <br/>
-            <br/>
+            <br />
+            <br />
             <p>{message}</p>
           </div>
           <img
             className={classes.playlistImage}
-            src={playlistData.images[0] ? playlistData.images[0].url : noImage}
+            src={
+              playlistData.images && playlistData.images[0]
+                ? playlistData.images[0].url
+                : noImage
+            }
             alt={playlistData.name + " playlist art"}
           />
         </div>
