@@ -89,7 +89,9 @@ function ArtistCard(props) {
               variant="h6"
               component="h3"
             >
-              {props.name.length >= 15 ? (
+              {props.name.length >= 45 ? (
+                props.name.substring(0, 19) + "..."
+              ) : props.name.length >= 19 ? (
                 <Textfit mode="single">{props.name}</Textfit>
               ) : (
                 props.name

@@ -112,7 +112,9 @@ const Playlists = (props) => {
                 variant="h6"
                 component="h3"
               >
-                {playlist.name.length >= 19 ? (
+                {playlist.name.length >= 45 ? (
+                  playlist.name.substring(0, 19) + "..."
+                ) : playlist.name.length >= 19 ? (
                   <Textfit mode="single">{playlist.name}</Textfit>
                 ) : (
                   playlist.name
