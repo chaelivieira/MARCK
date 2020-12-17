@@ -33,6 +33,12 @@ const useStyles = makeStyles({
     "&:hover": {
       backgroundColor: "#c3096b",
     },
+    "&:focus": {
+      backgroundColor: "#c3096b",
+    },
+    "&:active": {
+      backgroundColor: "#c3096b",
+    },
   },
 });
 
@@ -112,7 +118,7 @@ function Stats() {
               Disclaimer: If your Top Artists or Top Songs of All Time are
               empty, nothing will show in that field on the PDF
             </Textfit>
-            <div id="#foo"></div>
+            <div id="foo"></div>
           </div>
           <h2 className={classes.h2}>Top Songs:</h2>
           <Songs />
