@@ -12,8 +12,7 @@ import {
 import "../App.css";
 const useStyles = makeStyles({
   card: {
-    maxWidth: 250,
-    width: 200,
+    width: 250,
     height: "auto",
     marginLeft: "auto",
     marginRight: "auto",
@@ -48,7 +47,7 @@ const useStyles = makeStyles({
 function SongCard(props) {
   const classes = useStyles();
   return (
-    <Grid item xs={12} sm={4} md={3} lg={2} xl={2} key={uuidv4()}>
+    <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={uuidv4()}>
       <Card className={classes.card} variant="outlined" key={uuidv4()}>
         <div key={uuidv4()}>
           <CardMedia
