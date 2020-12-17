@@ -20,7 +20,7 @@
   width: 150px;
 }
 .App-header {
-  background-color: #217bc5;
+  background-color: #0b86f4;
   min-height: 20vh;
   display: flex;
   flex-direction: column;
@@ -29,7 +29,7 @@
   font-size: calc(10px + 2vmin);
   color: white;
 
-  font-family: "Helvetica", sans-serif;
+  font-family: "Verdana", sans-serif;
 }
 
 .Header-link {
@@ -38,7 +38,7 @@
 
 .Header-link:hover {
   text-decoration: unset;
-  color: lime;
+  color: #f40b86;
 }
 
 .App-link {
@@ -71,12 +71,12 @@ nav {
 
 .navlink:hover {
   all: unset;
-  color: lime;
+  color: #f40b86;
 }
 
 .Stats-button {
-  background-color: #217bc5;
-  color: #217bc5;
+  background-color: #0b12f4;
+  color: #0b86f4;
 }
 
 h3 {
