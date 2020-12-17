@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: 5,
-    border: "1px solid #1e8678",
+    border: "1px solid #0B86F4",
     boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
   },
   content: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     height: 320,
   },
   titleHead: {
-    borderBottom: "1px solid #1e8678",
+    borderBottom: "1px solid #0B86F4",
     fontWeight: "bold",
     minHeight: 34,
   },
@@ -41,6 +41,16 @@ const useStyles = makeStyles({
   media: {
     height: 250,
     width: "100%",
+  },
+  button: {
+    fontSize: 16,
+    backgroundColor: "#f40b86",
+    border: "none",
+    marginTop: 5,
+    marginBottom: 5,
+    "&:hover": {
+      backgroundColor: "#c3096b",
+    },
   },
 });
 
@@ -87,6 +97,7 @@ function ArtistCard(props) {
               )}
             </Typography>
             <Button
+              className={classes.button}
               key={uuidv4()}
               variant="secondary  mr-1"
               size="md"
@@ -94,14 +105,17 @@ function ArtistCard(props) {
             >
               Get Top Songs
             </Button>
-            <p key={uuidv4()}> Followers: {props.followers}</p>
-            <div key={uuidv4()}>
+            <p key={uuidv4()}>
+              Followers:{" "}
+              {props.followers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </p>
+            <p key={uuidv4()}>
               Genres:
               <br />
               {props.genres.slice(0, 5).map((x) => {
                 return <div key={uuidv4()}>{x}</div>;
               })}
-            </div>
+            </p>
           </CardContent>
         </Card>
       </Grid>

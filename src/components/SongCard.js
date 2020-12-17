@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: 5,
-    border: "1px solid #1e8678",
+    border: "1px solid #0B86F4",
     boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
   },
   content: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
     height: 200,
   },
   titleHead: {
-    borderBottom: "1px solid #1e8678",
+    borderBottom: "1px solid #0B86F4",
     fontWeight: "bold",
     minHeight: 34,
   },
@@ -37,6 +37,7 @@ const useStyles = makeStyles({
   media: {
     height: "100%",
     width: "100%",
+    borderBottom: "1px solid #0B86F4",
   },
   button: {
     color: "#1e8678",
