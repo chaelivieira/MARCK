@@ -15,6 +15,10 @@ import {
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
   card: {
     maxWidth: 250,
 
@@ -40,7 +44,8 @@ const useStyles = makeStyles({
   grid: {
     flexGrow: 1,
     flexDirection: "row",
-    padding: 50,
+    paddingLeft: 50,
+    paddingRight: 50,
   },
   media: {
     height: 250,
@@ -133,8 +138,7 @@ const Playlists = (props) => {
 
     return (
       <div>
-        <br />
-        <br />
+        <h1 className={classes.title}>{currentUser.displayName}'s Playlists</h1>
         <Grid container className={classes.grid} spacing={5}>
           {card}
         </Grid>
