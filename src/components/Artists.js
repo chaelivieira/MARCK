@@ -10,6 +10,25 @@ const useStyles = makeStyles({
   grid: {
     flexGrow: 1,
     flexDirection: "row",
+    paddingLeft: 50,
+    paddingRight: 50,
+    width: "100%",
+  },
+  button: {
+    fontSize: 16,
+    backgroundColor: "#0B86F4",
+    border: "none",
+    "&:hover": {
+      backgroundColor: "#096bc3",
+    },
+  },
+  activeButton: {
+    fontSize: 16,
+    backgroundColor: "#f40b86",
+    border: "none",
+    "&:hover": {
+      backgroundColor: "#c3096b",
+    },
   },
 });
 function Artists() {
@@ -51,6 +70,9 @@ function Artists() {
             Sorry.. You dont have any top artists within this time period
           </h2>
           <Button
+            className={
+              term === "short_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -59,6 +81,9 @@ function Artists() {
             This Month
           </Button>
           <Button
+            className={
+              term === "medium_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -67,6 +92,9 @@ function Artists() {
             This Year
           </Button>
           <Button
+            className={
+              term === "long_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -80,6 +108,9 @@ function Artists() {
       return (
         <div>
           <Button
+            className={
+              term === "short_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -88,6 +119,9 @@ function Artists() {
             This Month
           </Button>
           <Button
+            className={
+              term === "medium_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -96,6 +130,9 @@ function Artists() {
             This Year
           </Button>
           <Button
+            className={
+              term === "long_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -128,6 +165,9 @@ function Artists() {
     return (
       <div>
         <Button
+          className={
+            term === "short_term" ? classes.activeButton : classes.button
+          }
           key={uuidv4()}
           variant="secondary  mr-1"
           size="lg"
@@ -136,6 +176,9 @@ function Artists() {
           This Month
         </Button>
         <Button
+          className={
+            term === "medium_term" ? classes.activeButton : classes.button
+          }
           key={uuidv4()}
           variant="secondary  mr-1"
           size="lg"
@@ -144,6 +187,9 @@ function Artists() {
           This Year
         </Button>
         <Button
+          className={
+            term === "long_term" ? classes.activeButton : classes.button
+          }
           key={uuidv4()}
           variant="secondary  mr-1"
           size="lg"
