@@ -11,7 +11,7 @@ const axios = require("axios");
 
 const useStyles = makeStyles({
   h1: {
-    fontSize: 24,
+    fontSize: 36,
     marginBottom: 20,
   },
   h2: {
@@ -27,6 +27,7 @@ const useStyles = makeStyles({
   },
   pdfButton: {
     width: "auto",
+    fontSize: 28,
     backgroundColor: "#F40B86",
     border: "none",
     alignSelf: "center",

@@ -80,11 +80,25 @@ const PlaylistTracks = (props) => {
 
   const onFileUpload = async () => {
     if (
-      selectedFile.name.slice(-4) !== ".png" &&
-      selectedFile.name.slice(-4) !== ".jpg" &&
-      selectedFile.name.slice(-5) !== ".jpeg"
+      selectedFile.name.slice(-4).toLowerCase() !== ".png" &&
+      selectedFile.name.slice(-4).toLowerCase() !== ".jpg" &&
+      selectedFile.name.slice(-5).toLowerCase() !== ".jpeg"
     ) {
       alert("Image must be a png, jpg, or jpeg");
+      return;
+    } else if (
+      playlistData &&
+      playlistData.owner &&
+      playlistData.owner.id &&
+      currentUser &&
+      currentUser.uid &&
+      playlistData.owner.id !==
+        currentUser.uid.substring(
+          currentUser.uid.indexOf(":") + 1,
+          currentUser.uid.length
+        )
+    ) {
+      alert("Cannot edit this playlist");
       return;
     }
 
@@ -166,7 +180,7 @@ const PlaylistTracks = (props) => {
             </h4>
             <div className={classes.descriptionContainer}>
               <div className={classes.uploadContainer}>
-                <label for="new-playlist-image">New Playlist Image</label>
+                <label htmlFor="new-playlist-image">New Playlist Image</label>
                 <input
                   type="file"
                   accept=".jpg, .jpeg, .png"

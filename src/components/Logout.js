@@ -7,11 +7,17 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles({
   button: {
-    backgroundColor: "#0B86F4",
+    marginTop: 10,
+    backgroundColor: "#e6007d",
     border: "none",
     "&:hover": {
-      border: "none",
-      backgroundColor: "#096bc3",
+      backgroundColor: "#b80064",
+    },
+    "&:active": {
+      backgroundColor: "#b80064",
+    },
+    "&:focus": {
+      backgroundColor: "#b80064",
     },
   },
   link: {
@@ -39,7 +45,12 @@ function Logout() {
     return (
       <div>
         <p>Are you sure you want to log out?</p>
-        <Button type="button" onClick={onSignout} className={classes.button}>
+        <Button
+          type="button"
+          onClick={onSignout}
+          size="lg"
+          className={classes.button}
+        >
           <Link to="/" className={classes.link}>
             Log out
           </Link>
