@@ -20,7 +20,7 @@
   width: 150px;
 }
 .App-header {
-  background-color: #217bc5;
+  background-color: #0a79dc;
   min-height: 20vh;
   display: flex;
   flex-direction: column;
@@ -28,15 +28,8 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
 
-.Header-link {
-  color: white;
-}
-
-.Header-link:hover {
-  text-decoration: unset;
-  color: lime;
+  font-family: "Verdana", sans-serif;
 }
 
 .App-link {
@@ -62,17 +55,33 @@ nav {
   justify-content: space-around;
 }
 
+.Title-link {
+  all: unset;
+  color: white;
+  font-size: 42px;
+}
+
+.Title-link:hover {
+  all: unset;
+  color: #f40b86 !important;
+  font-size: 42px;
+  text-shadow: 0px 0px 5px white;
+}
+
 .navlink {
   all: unset;
   color: white;
+  font-size: 30px;
 }
 
 .navlink:hover {
   all: unset;
-  color: lime;
+  color: #f40b86 !important;
+  font-size: 30px;
+  text-shadow: 0px 0px 5px white;
 }
 
 .Stats-button {
-  background-color: #217bc5;
-  color: #217bc5;
+  background-color: #0b12f4;
+  color: #0b86f4;
 }

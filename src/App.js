@@ -1,10 +1,6 @@
 import React from "react";
 import { AuthProvider } from "./firebase/Auth";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
@@ -21,7 +17,7 @@ function App() {
         <div className="App">
           <header className="App-header">
             <h1>
-              <Link to="/" className="Header-link">
+              <Link to="/" className="Title-link">
                 Unwrapped
               </Link>
             </h1>

@@ -4,35 +4,50 @@ import { AuthContext } from "../firebase/Auth";
 import axios from "axios";
 import { Redirect, Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
+import Button from "react-bootstrap/Button";
 import "../App.css";
 const FormData = require("form-data");
 
 const useStyles = makeStyles({
-  card: {
-    maxWidth: 250,
-    height: "auto",
-    marginLeft: "auto",
-    marginRight: "auto",
-    borderRadius: 5,
-    border: "1px solid #1e8678",
-    boxShadow: "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);",
+  h2: {
+    color: "#0B86F4",
   },
-  titleHead: {
-    borderBottom: "1px solid #1e8678",
-    fontWeight: "bold",
+  h3: {
+    fontSize: 24,
+    fontWeight: "normal",
   },
-  grid: {
-    flexGrow: 1,
+  h4: {
+    borderBottom: "1px solid #0B86F4",
+    fontSize: 16,
+    fontWeight: "normal",
+    paddingBottom: 10,
+  },
+  descriptionContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  uploadContainer: {
+    display: "flex",
     flexDirection: "row",
-  },
-  media: {
-    height: "100%",
-    width: "100%",
+    width: 500,
+    paddingLeft: 50,
+    paddingRight: "auto",
+    justifyContent: "space-between",
   },
   button: {
-    color: "#1e8678",
-    fontWeight: "bold",
-    fontSize: 12,
+    marginTop: 10,
+    backgroundColor: "#e6007d",
+    border: "none",
+    "&:hover": {
+      backgroundColor: "#b80064",
+    },
+    "&:active": {
+      backgroundColor: "#b80064",
+    },
+    "&:focus": {
+      backgroundColor: "#b80064",
+    },
   },
   playlistHeader: {
     display: "flex",
@@ -126,36 +141,40 @@ const PlaylistTracks = (props) => {
         <Redirect to="/login" />
       </div>
     );
-  } else if (playlistData && playlistData.errorMessage ) {
+  } else if (playlistData && playlistData.errorMessage) {
     return (
       <div>
-        <h2>{playlistData.errorMessage}</h2>
-        <Link to='/playlists'>Back to Playlists</Link>
+        <h3>{playlistData.errorMessage}</h3>
+        <Link to="/playlists">Back to Playlists</Link>
       </div>
     );
-  } else if (loading ) {
+  } else if (loading) {
     return (
       <div>
-        <h2>Loading...</h2>
+        <h3>Loading...</h3>
       </div>
     );
-  } else  {
+  } else {
     return (
       <div>
         <div className={classes.playlistHeader}>
           <div className="Playlist-tracks-info">
-            <h1>{playlistData.name}</h1>
-            <h2>{playlistData.description}</h2>
-            <p>
+            <h2 className={classes.h2}>{playlistData.name}</h2>
+            <h3 className={classes.h3}>{playlistData.description}</h3>
+            <h4 className={classes.h4}>
               A playlist by {playlistData.owner ? playlistData.owner.id : ""}
-            </p>
-            <div>
-              <input
-                type="file"
-                accept=".jpg, .jpeg, .png"
-                onChange={onFileChange}
-              />
-              <button
+            </h4>
+            <div className={classes.descriptionContainer}>
+              <div className={classes.uploadContainer}>
+                <label for="new-playlist-image">New Playlist Image</label>
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={onFileChange}
+                  id="new-playlist-image"
+                />
+              </div>
+              <Button
                 onClick={() => {
                   if (!selectedFile) {
                     alert("Please upload an image first!");
@@ -164,9 +183,11 @@ const PlaylistTracks = (props) => {
                     onFileUpload();
                   }
                 }}
+                className={classes.button}
+                size="lg"
               >
                 Update Playlist Image
-              </button>
+              </Button>
             </div>
             <br />
             <br />
@@ -187,7 +208,7 @@ const PlaylistTracks = (props) => {
             src={`https://open.spotify.com/embed/playlist/${playlistData.id}`}
             title={`spotify player for playlist ${playlistData.name}`}
             width="100%"
-            height="800"
+            height="600"
             frameBorder="4"
             allowtransparency="true"
             allow="encrypted-media"

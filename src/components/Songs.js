@@ -10,6 +10,25 @@ const useStyles = makeStyles({
   grid: {
     flexGrow: 1,
     flexDirection: "row",
+    paddingLeft: 50,
+    paddingRight: 50,
+    width: "100%",
+  },
+  button: {
+    fontSize: 16,
+    backgroundColor: "#0B86F4",
+    border: "none",
+    "&:hover": {
+      backgroundColor: "#096bc3",
+    },
+  },
+  activeButton: {
+    fontSize: 16,
+    backgroundColor: "#f40b86",
+    border: "none",
+    "&:hover": {
+      backgroundColor: "#c3096b",
+    },
   },
 });
 function Songs() {
@@ -51,6 +70,9 @@ function Songs() {
             Sorry.. You dont have any top songs within this time period
           </h2>
           <Button
+            className={
+              term === "short_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -59,6 +81,9 @@ function Songs() {
             This Month
           </Button>
           <Button
+            className={
+              term === "medium_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -67,6 +92,9 @@ function Songs() {
             This Year
           </Button>
           <Button
+            className={
+              term === "long_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -77,9 +105,13 @@ function Songs() {
         </div>
       );
     } else {
+      // data found
       return (
         <div key={uuidv4()}>
           <Button
+            className={
+              term === "short_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -88,6 +120,9 @@ function Songs() {
             This Month
           </Button>
           <Button
+            className={
+              term === "medium_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -96,6 +131,9 @@ function Songs() {
             This Year
           </Button>
           <Button
+            className={
+              term === "long_term" ? classes.activeButton : classes.button
+            }
             key={uuidv4()}
             variant="secondary  mr-1"
             size="lg"
@@ -126,13 +164,34 @@ function Songs() {
   } else {
     return (
       <div>
-        <Button variant="secondary  mr-1" size="lg" onClick={handleShort_term}>
+        <Button
+          className={
+            term === "short_term" ? classes.activeButton : classes.button
+          }
+          variant="secondary  mr-1"
+          size="lg"
+          onClick={handleShort_term}
+        >
           This Month
         </Button>
-        <Button variant="secondary  mr-1" size="lg" onClick={handleMedium_term}>
+        <Button
+          className={
+            term === "medium_term" ? classes.activeButton : classes.button
+          }
+          variant="secondary  mr-1"
+          size="lg"
+          onClick={handleMedium_term}
+        >
           This Year
         </Button>
-        <Button variant="secondary  mr-1" size="lg" onClick={handleLong_term}>
+        <Button
+          className={
+            term === "long_term" ? classes.activeButton : classes.button
+          }
+          variant="secondary  mr-1"
+          size="lg"
+          onClick={handleLong_term}
+        >
           All Time
         </Button>
       </div>

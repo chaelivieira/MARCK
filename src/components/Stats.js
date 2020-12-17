@@ -1,14 +1,50 @@
 import React, { useContext } from "react";
 import Songs from "./Songs";
 import Artists from "./Artists";
-import "../App.css";
 import { Redirect } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
 import Button from "react-bootstrap/Button";
+import { Textfit } from "react-textfit";
+import { makeStyles } from "@material-ui/core";
+import "../App.css";
 const axios = require("axios");
+
+const useStyles = makeStyles({
+  h1: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  h2: {
+    marginTop: 20,
+  },
+  pdfContainer: {
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: 600,
+    display: "flex",
+    flexFlow: "column nowrap",
+    justifyContent: "center",
+  },
+  pdfButton: {
+    width: "auto",
+    backgroundColor: "#F40B86",
+    border: "none",
+    alignSelf: "center",
+    "&:hover": {
+      backgroundColor: "#c3096b",
+    },
+    "&:focus": {
+      backgroundColor: "#c3096b",
+    },
+    "&:active": {
+      backgroundColor: "#c3096b",
+    },
+  },
+});
 
 function Stats() {
   const { currentUser } = useContext(AuthContext);
+  const classes = useStyles();
   function makeOL(array) {
     var list = document.createElement("ol");
     for (var i = 0; i < array.length; i++) {
@@ -67,17 +103,26 @@ function Stats() {
         <Redirect to="/login" />
       ) : (
         <div>
-          <Button variant="secondary" onClick={handle_pdf}>
-            Download Stats From All Time PDF
-          </Button>
-          <br></br>
-          <p>Disclaimer: If your Top Artists or Top Songs are empty, nothing will show in that field on the PDF</p>
-          <br></br>
-          <div id="foo"></div>
-          <h1>Top Songs:</h1>
+          <h1 className={classes.h1}>
+            {currentUser.displayName}'s Listening History
+          </h1>
+          <div className={classes.pdfContainer}>
+            <Button
+              variant="secondary"
+              onClick={handle_pdf}
+              className={classes.pdfButton}
+            >
+              Download Listening History From All Time PDF
+            </Button>
+            <Textfit mode="single" forceSingleModeWidth={true}>
+              Disclaimer: If your Top Artists or Top Songs of All Time are
+              empty, nothing will show in that field on the PDF
+            </Textfit>
+            <div id="foo"></div>
+          </div>
+          <h2 className={classes.h2}>Top Songs:</h2>
           <Songs />
-          <br />
-          <h1>Top Artists:</h1>
+          <h2 className={classes.h2}>Top Artists:</h2>
           <Artists />
         </div>
       )}

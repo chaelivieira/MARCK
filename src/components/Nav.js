@@ -12,7 +12,7 @@ function Nav() {
           Playlists
         </NavLink>
         <NavLink to="/stats" className="navlink">
-          Stats
+          Listening History
         </NavLink>
         <NavLink to="/logout" className="navlink">
           Log out
@@ -26,7 +26,7 @@ function Nav() {
           Playlists
         </NavLink>
         <NavLink to="/login" className="navlink">
-          Stats
+          Listening History
         </NavLink>
         <NavLink to="/login" className="navlink">
           Log in
