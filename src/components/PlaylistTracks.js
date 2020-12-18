@@ -98,7 +98,7 @@ const PlaylistTracks = (props) => {
           currentUser.uid.length
         )
     ) {
-      alert("Cannot edit this playlist");
+      alert("You do not have permission to edit this playlist");
       return;
     }
 
