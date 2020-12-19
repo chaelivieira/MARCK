@@ -1,6 +1,6 @@
 # Server Dependencies
 ## NPM Packages
-Make sure that all NPM dependencies are installed with `npm install`!
+Make sure that all NPM dependencies are installed with `npm install`! If the install fails due to a dependency conflict from react-textfit or any other package, try doing an `npm install --force`.
 
 ## Redis 
 Ensure that you have redis installed on your system before running the server. Start the redis server in a terminal with the `redis-server` command.
