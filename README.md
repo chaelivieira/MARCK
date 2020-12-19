@@ -6,7 +6,7 @@ Make sure that all NPM dependencies are installed with `npm install`! If the ins
 Ensure that you have redis installed on your system before running the server. Start the redis server in a terminal with the `redis-server` command.
 
 ## ImageMagick
-This project also uses ImageMagick with the server. The server is set up to work with as many versions as possible, so if installing version 7+, make sure that the legacy commands are also installed so that `convert` is recoginzed.
+This project also uses ImageMagick with the server. The server is set up to work with as many versions as possible, so if installing version 7+, make sure that the legacy commands are also installed so that `convert` is recognized.
 
 ## Wkhtmltopdf
 You must also have wkhtmltopdf installed in order to run the server. You can download the software for your operating system at https://wkhtmltopdf.org/downloads.html
